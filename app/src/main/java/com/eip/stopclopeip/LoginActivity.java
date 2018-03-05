@@ -30,8 +30,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends Activity
@@ -42,8 +40,7 @@ public class LoginActivity extends Activity
     private ScrollView mLoginFormView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         final RequestQueue queue = Volley.newRequestQueue(this);
@@ -69,8 +66,6 @@ public class LoginActivity extends Activity
                 showProgress(true);
 
                 Log.v("Login", "Email = " + mEmailView.getText().toString() + " | Password = " + mPasswordView.getText().toString());
-
-                JSONObject data = new JSONObject();
 
                 if (mEmailView.getText().toString().isEmpty() && mPasswordView.getText().toString().isEmpty() && logError[0].equals(false)) {
                     mEmailView.setError("An Email or Username is requiered");
@@ -107,10 +102,8 @@ public class LoginActivity extends Activity
                         }
 
                         try {
-                            String myResponse = jsonResponse.getString("reponse");
-                            String data = jsonResponse.getString("data");
-                            JSONObject jsonData = new JSONObject(data);
-                            if (myResponse.equals("OK")) {
+                            JSONObject jsonData = new JSONObject(jsonResponse.getString("data"));
+                            if (jsonResponse.getString("reponse").equals("OK")) {
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("token", jsonData.getString("token"));
                                 intent.putExtra("email", mEmailView.getText().toString());
@@ -138,8 +131,7 @@ public class LoginActivity extends Activity
                 {
                     @Override
                     protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap();
-                        return params;
+                        return null;
                     }
                 };
                 queue.add(stringRequest);
@@ -149,40 +141,34 @@ public class LoginActivity extends Activity
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
-    public void SignUp(View view) {
+    void SignUp(View view) {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 
-    public void Alert(String Msg) {
+    void Alert(String Msg) {
         Toast.makeText(LoginActivity.this, Msg, Toast.LENGTH_SHORT).show();
     }
 }
