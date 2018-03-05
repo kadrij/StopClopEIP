@@ -1,9 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.eip.stopclopeip.RegisterActivity">
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        android:id="@+id/register_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+            android:id="@+id/register_input_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="156dp"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="50dp"
+                android:adjustViewBounds="false"
+                android:background="@color/colorPrimaryDark"
+                android:contentDescription=""
+                android:cropToPadding="false"
+                android:src="@drawable/stopclop_logo"
+                tools:ignore="ContentDescription" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:textColorHint="@android:color/background_light">
+
+                <AutoCompleteTextView
+                    android:id="@+id/email_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:drawableLeft="@drawable/ic_email_black_36dp"
+                    android:drawableTint="@color/colorPrimary"
+                    android:fontFamily="sans-serif"
+                    android:hint="Adresse mail"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:textColor="?attr/colorAccent" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:textColorHint="@android:color/background_light">
+
+
+                <EditText
+                    android:id="@+id/password_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:drawableLeft="@drawable/ic_lock_outline_black_36dp"
+                    android:drawableTint="@color/colorPrimary"
+                    android:hint="Mot de passe"
+                    android:imeActionLabel="@string/action_sign_in"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/birth"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:textColorHint="@android:color/background_light">
+
+
+                <TextView
+                    android:id="@+id/birth_date_picker"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginRight="23dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.06"
+                    android:onClick="datePicker"
+                    android:text="00-00-0000"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/register_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/colorAccent"
+                android:onClick="registerAccount"
+                android:text="Enregistrer"
+                android:textAllCaps="false"
+                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:id="@+id/birth_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="23dp"
+                android:layout_marginRight="23dp"
+                android:text="Date de naissance"
+                android:textColor="@android:color/background_light"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
