@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 public class RegisterActivity extends Activity {
-    final String url = "http://romain-caldas.fr/api/rest.php?";
+    String url = "http://romain-caldas.fr/api/rest.php?dev=69";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class RegisterActivity extends Activity {
         }
         else {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                    + "function=user.create&dev=69&email="
+                    + "&function=user.create&email="
                     + mEmail.getText().toString()
                     + "&password="
                     + mPassword.getText().toString()

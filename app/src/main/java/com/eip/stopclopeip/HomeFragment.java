@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class HomeFragment extends Fragment {
+    String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+
     public HomeFragment() {
     }
 

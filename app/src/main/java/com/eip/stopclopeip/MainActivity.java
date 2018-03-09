@@ -22,12 +22,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private boolean isHome = false;
-    private boolean isButton = false;
-    private boolean isStat = false;
-    private boolean isAdvice = false;
-    private boolean isContacts = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +37,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        isHome = true;
         toolbar.setTitle("Accueil");
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+        Bundle bundle = new Bundle();
+        bundle.putString("token", getIntent().getStringExtra("token"));
+        bundle.putString("email", getIntent().getStringExtra("email"));
+        HomeFragment mFragment = new HomeFragment();
+        mFragment.setArguments(bundle);
+        fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
     }
 
     @Override
@@ -82,25 +80,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         Toolbar toolbar = findViewById(R.id.toolbar);
         FragmentManager fragmentManager = getFragmentManager();
+        Bundle bundle = new Bundle();
+        bundle.putString("token", getIntent().getStringExtra("token"));
+        bundle.putString("email", getIntent().getStringExtra("email"));
 
         if (id == R.id.nav_home) {
-            isHome = true;
-            isButton = false;
-            isStat = false;
             toolbar.setTitle("Accueil");
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+            HomeFragment mFragment = new HomeFragment();
+            mFragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         } else if (id == R.id.nav_button) {
-            isHome = false;
-            isButton = true;
-            isStat = false;
             toolbar.setTitle("Bouton");
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new ButtonFragment()).commit();
+            ButtonFragment mFragment = new ButtonFragment();
+            mFragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         } else if (id == R.id.nav_graph) {
-            isHome = false;
-            isButton = false;
-            isStat = true;
             toolbar.setTitle("Statistiques");
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new StatFragment()).commit();
+            StatFragment mFragment = new StatFragment();
+            mFragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         } else if (id == R.id.nav_advice) {
 
         } else if (id == R.id.nav_contacts) {

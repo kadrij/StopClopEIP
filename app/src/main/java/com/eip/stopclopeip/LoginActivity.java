@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import java.util.Map;
 
 public class LoginActivity extends Activity {
+    String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+
     private AutoCompleteTextView mEmail;
     private EditText mPassword;
     private ProgressBar mProgress;
@@ -40,8 +42,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         final RequestQueue queue = Volley.newRequestQueue(this);
-
-        final String url = "http://romain-caldas.fr/api/rest.php?dev=69";
 
         mProgress = findViewById(R.id.login_progress_bar);
         mLoginForm = findViewById(R.id.login_form);

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_scan"
-        android:icon="@drawable/ic_rss_feed_black_24dp"
+        android:icon="@drawable/ic_rss_feed_white_24dp"
         android:iconTint="@android:color/background_light"
         android:title="Scan"
         android:visible="true"
