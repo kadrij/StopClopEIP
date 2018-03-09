@@ -84,8 +84,7 @@ public class StatFragment extends Fragment {
                             int red = 0;
                             int black = 0;
 
-                            for (int i = 0; i < userArray.length(); i++)
-                            {
+                            for (int i = 0; i < userArray.length(); i++) {
                                 JSONObject userData = userArray.getJSONObject(i);
                                 if (userData.getString("button").equals("BLUE"))
                                     blue++;
@@ -100,8 +99,8 @@ public class StatFragment extends Fragment {
                             List<BarEntry> entriesGroup3 = new ArrayList<>();
 
                             entriesGroup1.add(new BarEntry(0f, red));
-                            entriesGroup2.add(new BarEntry(1f, blue));
-                            entriesGroup3.add(new BarEntry(2f, black));
+                            entriesGroup2.add(new BarEntry(0f, blue));
+                            entriesGroup3.add(new BarEntry(0f, black));
 
                             BarDataSet set1 = new BarDataSet(entriesGroup1, "Habitudes évitée(s)");
                             BarDataSet set2 = new BarDataSet(entriesGroup2, "Cigarettes évitée(s)");
