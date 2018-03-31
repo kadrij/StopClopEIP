@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.design.widget.NavigationView;
@@ -314,7 +315,9 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         else if (theString.equals("black"))
             sendObjectPression("BLACK");
 
-        if (onButtonFragment == true)
+        if (onButtonFragment == true) {
+            SystemClock.sleep(500);
             getPressionCount();
+        }
     }
 }

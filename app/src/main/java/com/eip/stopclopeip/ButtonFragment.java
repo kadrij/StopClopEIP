@@ -2,6 +2,7 @@ package com.eip.stopclopeip;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -120,6 +121,7 @@ public class ButtonFragment extends Fragment {
         };
         queue.add(stringRequest);
         queue.start();
+        SystemClock.sleep(500);
         getCount(view);
     }
 
