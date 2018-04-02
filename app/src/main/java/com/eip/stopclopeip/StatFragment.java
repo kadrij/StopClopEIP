@@ -2,6 +2,9 @@ package com.eip.stopclopeip;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,21 +19,32 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import static java.lang.Math.toIntExact;
 
 public class StatFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
@@ -77,30 +91,78 @@ public class StatFragment extends Fragment {
                             TextView instMoney = view.findViewById(R.id.installation_value);
                             TextView weekMoney = view.findViewById(R.id.week_value);
 
+                            JSONObject userData;
+                            final String labels[] = new String[7];
+                            int red[] = new int[7];
+                            int blue[] = new int[7];
+                            int black[] = new int[7];
+                            int blueTotalInstallation = 0;
+                            int redTotalInstallation = 0;
+                            int blueTotalWeek = 0;
+                            int redTotalWeek = 0;
+                            Date currentDate = new Date();
+                            Date date;
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
                             String data = jsonResponse.getString("data");
                             JSONArray userArray = new JSONArray(data);
 
-                            int blue = 0;
-                            int red = 0;
-                            int black = 0;
+                            for (int i = 0; i < userArray.length(); i++) {
+                                userData = userArray.getJSONObject(i);
+                                if (userData.getString("button").equals("BLUE"))
+                                    blueTotalInstallation++;
+                                else if (userData.getString("button").equals("RED"))
+                                    redTotalInstallation++;
+
+                            }
+
+                            for (int i = 0; i < 7; i++) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.add(Calendar.DATE, i * -1);
+                                date = cal.getTime();
+                                labels[i] = (DateFormat.format("dd/MM", Math.abs(date.getTime()))).toString();
+                            }
 
                             for (int i = 0; i < userArray.length(); i++) {
-                                JSONObject userData = userArray.getJSONObject(i);
-                                if (userData.getString("button").equals("BLUE"))
-                                    blue++;
-                                else if (userData.getString("button").equals("RED"))
-                                    red++;
-                                else
-                                    black++;
+                                userData = userArray.getJSONObject(i);
+                                date = format.parse(userData.getString("date"));
+                                long diff = Math.abs(currentDate.getTime() - date.getTime());
+                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
+                                if (TimeUnit.MILLISECONDS.toDays(diff) < 7) {
+                                    if (userData.getString("button").equals("BLUE"))
+                                        blue[day]++;
+                                    else if (userData.getString("button").equals("RED"))
+                                        red[day]++;
+                                    else
+                                        black[day]++;
+                                }
+                            }
+
+                            XAxis xvalButton = barChart.getXAxis();
+                            xvalButton.setDrawLabels(true);
+                            xvalButton.setValueFormatter(new IAxisValueFormatter() {
+                                @Override
+                                public String getFormattedValue(float value, AxisBase axis) {
+                                    if (labels[(int)value] == null)
+                                        return "";
+                                    return labels[(int)value];
+                                }
+                            });
+
+                            for (int i = 0; i < red.length; i++) {
+                                blueTotalWeek += blue[i];
+                                redTotalWeek += red[i];
                             }
 
                             List<BarEntry> entriesGroup1 = new ArrayList<>();
                             List<BarEntry> entriesGroup2 = new ArrayList<>();
                             List<BarEntry> entriesGroup3 = new ArrayList<>();
 
-                            entriesGroup1.add(new BarEntry(0f, red));
-                            entriesGroup2.add(new BarEntry(0f, blue));
-                            entriesGroup3.add(new BarEntry(0f, black));
+                            for (int i = 0; i < red.length; i++) {
+                                entriesGroup1.add(new BarEntry(i, red[i]));
+                                entriesGroup2.add(new BarEntry(i, blue[i]));
+                                entriesGroup3.add(new BarEntry(i, black[i]));
+                            }
 
                             BarDataSet set1 = new BarDataSet(entriesGroup1, "Habitudes évitée(s)");
                             BarDataSet set2 = new BarDataSet(entriesGroup2, "Cigarettes évitée(s)");
@@ -121,15 +183,30 @@ public class StatFragment extends Fragment {
                             barChart.invalidate();
 
                             List<Entry> lineEntries = new ArrayList<>();
-                            lineEntries.add(new Entry(10f, (blue + red) * 7));
-                            weekMoney.setText("" + (blue + red) * 7);
-                            instMoney.setText("" + (blue + red) * 7);
+                            for (int i = 0; i < red.length; i++)
+                                lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[i] + red[i]) * 0.425))));
+
+                            XAxis xvalMoney = lineChart.getXAxis();
+                            xvalMoney.setDrawLabels(true);
+                            xvalMoney.setValueFormatter(new IAxisValueFormatter() {
+                                @Override
+                                public String getFormattedValue(float value, AxisBase axis) {
+                                    if (labels[(int)value] == null)
+                                        return "";
+                                    return labels[(int)value];
+                                }
+                            });
+
+                            weekMoney.setText("" + (blueTotalWeek + redTotalWeek) * 0.425);
+                            instMoney.setText("" + (blueTotalInstallation + redTotalInstallation) * 0.425);
                             LineDataSet lineSet = new LineDataSet(lineEntries, "Argent économisé");
                             lineSet.setColor(getResources().getColor(R.color.DollarGreen));
                             LineData lineData = new LineData(lineSet);
                             lineChart.setData(lineData);
                             lineChart.invalidate();
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
@@ -154,3 +231,4 @@ public class StatFragment extends Fragment {
         Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();
     }
 }
+

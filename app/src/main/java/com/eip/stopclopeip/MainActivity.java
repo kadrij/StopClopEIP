@@ -14,9 +14,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import java.util.Map;
 public class MainActivity extends BlunoLibrary implements NavigationView.OnNavigationItemSelectedListener {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     boolean onButtonFragment = false;
+    boolean serviceOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +124,15 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             mFragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         } else if (id == R.id.nav_advice) {
-
+            toolbar.setTitle("Conseils");
+            AdviceFragment mFragment = new AdviceFragment();
+            mFragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         } else if (id == R.id.nav_contacts) {
-
+            toolbar.setTitle("Contacts");
+            ContactFragment mFragment = new ContactFragment();
+            mFragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

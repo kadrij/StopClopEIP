@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#00BCD4</color>
     <!--color name="colorPrimary">#41a2ae</color-->
-    <color name="colorPrimaryDark">#1A237E</color>
+    <color name="colorPrimaryDark">#1a237e</color>
     <!--color name="colorPrimaryDark">#132050</color-->
     <color name="colorAccent">#41a2ae</color>
     <color name="BlueButton">#42A5F5</color>
@@ -11,4 +11,5 @@
     <color name="YellowLoad">#FFDC73</color>
     <color name="BlackButton">#000000</color>
     <color name="black_overlay">#66000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>
