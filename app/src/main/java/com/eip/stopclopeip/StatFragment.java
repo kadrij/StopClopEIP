@@ -1,13 +1,15 @@
 package com.eip.stopclopeip;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,17 +40,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import static java.lang.Math.toIntExact;
 
 public class StatFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    private ProgressBar mProgress;
+    private ConstraintLayout mErrorForm;
+    private ConstraintLayout mStatForm;
 
     public StatFragment() {
     }
@@ -71,6 +73,10 @@ public class StatFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         final RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+        mProgress = view.findViewById(R.id.progressBar);
+        mStatForm = view.findViewById(R.id.stat_form);
+        mErrorForm = view.findViewById(R.id.error_form);
+        showProgress(true);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                 + "&function=coordonnee.get&email="
@@ -139,6 +145,9 @@ public class StatFragment extends Fragment {
                                 }
                             }
 
+                            barChart.getDescription().setEnabled(false);
+                            barChart.getXAxis().setDrawGridLines(false);
+
                             XAxis xvalButton = barChart.getXAxis();
                             xvalButton.setDrawLabels(true);
                             xvalButton.setValueFormatter(new IAxisValueFormatter() {
@@ -181,6 +190,9 @@ public class StatFragment extends Fragment {
                             barChart.groupBars(-0.50f, groupSpace, barSpace);
                             barChart.invalidate();
 
+                            lineChart.getDescription().setEnabled(false);
+                            lineChart.getXAxis().setDrawGridLines(false);
+
                             List<Entry> lineEntries = new ArrayList<>();
                             for (int i = 0; i < red.length; i++)
                                 lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[6 - i] + red[6 - i]) * 0.425))));
@@ -201,6 +213,7 @@ public class StatFragment extends Fragment {
                             LineData lineData = new LineData(lineSet);
                             lineChart.setData(lineData);
                             lineChart.invalidate();
+                            showProgress(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (ParseException e) {
@@ -211,6 +224,8 @@ public class StatFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Alert("Impossible de se connecter au serveur");
+                showProgress(false);
+                showError(true);
             }
         }) {
             @Override
@@ -222,6 +237,50 @@ public class StatFragment extends Fragment {
         };
         queue.add(stringRequest);
         queue.start();
+    }
+
+    void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        mStatForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgress.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    void showError(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        mStatForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+        mErrorForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     public void Alert(String Msg) {

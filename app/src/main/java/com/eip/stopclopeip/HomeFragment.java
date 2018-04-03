@@ -1,7 +1,10 @@
 package com.eip.stopclopeip;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.constraint.ConstraintLayout;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +39,9 @@ import javax.security.auth.callback.Callback;
 
 public class HomeFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    private ProgressBar mProgress;
+    private RelativeLayout mHomeForm;
+    private ConstraintLayout mErrorForm;
 
     public HomeFragment() {
     }
@@ -58,7 +66,12 @@ public class HomeFragment extends Fragment {
         final ImageView cactus = view.findViewById(R.id.cactos_image);
         Chronometer sevrageTime = view.findViewById(R.id.sevrage_value);
         TextView sevrageRecord = view.findViewById(R.id.record_value);
+        mProgress = view.findViewById(R.id.progressBar);
+        mHomeForm = view.findViewById(R.id.home_form);
+        mErrorForm = view.findViewById(R.id.error_form);
         final Date[] mDateClop = {new Date()};
+
+        showProgress(true);
 
         getDateClop(new CallBack() {
             @Override
@@ -68,6 +81,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFail(String msg) {
+                showProgress(false);
+                showError(true);
                 Alert("Impossible de récupérer le temps de sevrage");
             }
         });
@@ -134,10 +149,13 @@ public class HomeFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        showProgress(false);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                showProgress(false);
+                showError(true);
                 Alert("Impossible de se connecter au serveur");
             }
         }) {
@@ -203,6 +221,50 @@ public class HomeFragment extends Fragment {
     public interface CallBack {
         void onSuccess(Date dateClop);
         void onFail(String msg);
+    }
+
+    void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        mHomeForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgress.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    void showError(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        mHomeForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+        mErrorForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     public void Alert(String Msg) {
