@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -143,9 +144,7 @@ public class StatFragment extends Fragment {
                             xvalButton.setValueFormatter(new IAxisValueFormatter() {
                                 @Override
                                 public String getFormattedValue(float value, AxisBase axis) {
-                                    if (labels[(int)value] == null)
-                                        return "";
-                                    return labels[(int)value];
+                                    return labels[6 - (int)value];
                                 }
                             });
 
@@ -159,9 +158,9 @@ public class StatFragment extends Fragment {
                             List<BarEntry> entriesGroup3 = new ArrayList<>();
 
                             for (int i = 0; i < red.length; i++) {
-                                entriesGroup1.add(new BarEntry(i, red[i]));
-                                entriesGroup2.add(new BarEntry(i, blue[i]));
-                                entriesGroup3.add(new BarEntry(i, black[i]));
+                                entriesGroup1.add(new BarEntry(i, red[6 - i]));
+                                entriesGroup2.add(new BarEntry(i, blue[6 - i]));
+                                entriesGroup3.add(new BarEntry(i, black[6 - i]));
                             }
 
                             BarDataSet set1 = new BarDataSet(entriesGroup1, "Habitudes évitée(s)");
@@ -184,21 +183,19 @@ public class StatFragment extends Fragment {
 
                             List<Entry> lineEntries = new ArrayList<>();
                             for (int i = 0; i < red.length; i++)
-                                lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[i] + red[i]) * 0.425))));
+                                lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[6 - i] + red[6 - i]) * 0.425))));
 
                             XAxis xvalMoney = lineChart.getXAxis();
                             xvalMoney.setDrawLabels(true);
                             xvalMoney.setValueFormatter(new IAxisValueFormatter() {
                                 @Override
                                 public String getFormattedValue(float value, AxisBase axis) {
-                                    if (labels[(int)value] == null)
-                                        return "";
-                                    return labels[(int)value];
+                                    return labels[6 - (int)value];
                                 }
                             });
 
-                            weekMoney.setText("" + (blueTotalWeek + redTotalWeek) * 0.425);
-                            instMoney.setText("" + (blueTotalInstallation + redTotalInstallation) * 0.425);
+                            weekMoney.setText(new DecimalFormat("#.##").format((blueTotalWeek + redTotalWeek) * 0.425));
+                            instMoney.setText(new DecimalFormat("#.##").format((blueTotalInstallation + redTotalInstallation) * 0.425));
                             LineDataSet lineSet = new LineDataSet(lineEntries, "Argent économisé");
                             lineSet.setColor(getResources().getColor(R.color.DollarGreen));
                             LineData lineData = new LineData(lineSet);
