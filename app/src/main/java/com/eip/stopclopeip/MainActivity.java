@@ -1,24 +1,28 @@
 package com.eip.stopclopeip;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +37,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends BlunoLibrary implements NavigationView.OnNavigationItemSelectedListener {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     boolean onButtonFragment = false;
-    boolean serviceOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
         onCreateProcess();
         serialBegin(115200);
+
+        statusCheck();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -199,6 +208,9 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
                             TextView red_count = findViewById(R.id.red_count);
                             TextView blue_count = findViewById(R.id.blue_count);
                             TextView black_count = findViewById(R.id.black_count);
+                            Date currentDate = new Date();
+                            Date date;
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
                             String data = jsonResponse.getString("data");
                             JSONArray userArray = new JSONArray(data);
@@ -209,18 +221,25 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
                             for (int i = 0; i < userArray.length(); i++) {
                                 JSONObject userData = userArray.getJSONObject(i);
-                                if (userData.getString("button").equals("BLUE"))
-                                    blue++;
-                                else if (userData.getString("button").equals("RED"))
-                                    red++;
-                                else
-                                    black++;
+                                date = format.parse(userData.getString("date"));
+                                long diff = Math.abs(currentDate.getTime() - date.getTime());
+                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
+                                if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
+                                    if (userData.getString("button").equals("BLUE"))
+                                        blue++;
+                                    else if (userData.getString("button").equals("RED"))
+                                        red++;
+                                    else
+                                        black++;
+                                }
                             }
 
                             red_count.setText("" + red);
                             blue_count.setText("" + blue);
                             black_count.setText("" + black);
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
@@ -266,6 +285,33 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
     public void Alert(String Msg) {
         Toast.makeText(this, Msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void statusCheck() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Votre GPS semble désactivé, voulez-vous l'activé ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override

@@ -1,13 +1,17 @@
 package com.eip.stopclopeip;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,13 +34,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.invoke.ConstantCallSite;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class ButtonFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    private ProgressBar mProgress;
+    private ConstraintLayout mButtonForm;
+    private ConstraintLayout mErrorForm;
+    private boolean firstGet = false;
 
     public ButtonFragment() {
     }
@@ -61,7 +74,11 @@ public class ButtonFragment extends Fragment {
         Button red_button = view.findViewById(R.id.red_button);
         Button blue_button = view.findViewById(R.id.blue_button);
         Button black_button = view.findViewById(R.id.black_button);
+        mProgress = view.findViewById(R.id.progressBar);
+        mButtonForm = view.findViewById(R.id.button_form);
+        mErrorForm = view.findViewById(R.id.error_form);
 
+        showProgress(true);
         getCount(view);
 
         red_button.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +164,9 @@ public class ButtonFragment extends Fragment {
                             TextView red_count = view.findViewById(R.id.red_count);
                             TextView blue_count = view.findViewById(R.id.blue_count);
                             TextView black_count = view.findViewById(R.id.black_count);
+                            Date currentDate = new Date();
+                            Date date;
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
                             String data = jsonResponse.getString("data");
                             JSONArray userArray = new JSONArray(data);
@@ -157,24 +177,34 @@ public class ButtonFragment extends Fragment {
 
                             for (int i = 0; i < userArray.length(); i++) {
                                 JSONObject userData = userArray.getJSONObject(i);
-                                if (userData.getString("button").equals("BLUE"))
-                                    blue++;
-                                else if (userData.getString("button").equals("RED"))
-                                    red++;
-                                else
-                                    black++;
+                                date = format.parse(userData.getString("date"));
+                                long diff = Math.abs(currentDate.getTime() - date.getTime());
+                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
+                                if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
+                                    if (userData.getString("button").equals("BLUE"))
+                                        blue++;
+                                    else if (userData.getString("button").equals("RED"))
+                                        red++;
+                                    else
+                                        black++;
+                                }
                             }
 
                             red_count.setText("" + red);
                             blue_count.setText("" + blue);
                             black_count.setText("" + black);
+                            showProgress(false);
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                showProgress(false);
+                showError(true);
                 Alert("Impossible de se connecter au serveur");
             }
         }) {
@@ -187,6 +217,50 @@ public class ButtonFragment extends Fragment {
         };
         queue.add(stringRequest);
         queue.start();
+    }
+
+    void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        mButtonForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgress.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    void showError(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        mButtonForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+        mErrorForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     public void Alert(String Msg) {
