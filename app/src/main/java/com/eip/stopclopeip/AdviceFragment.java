@@ -49,9 +49,7 @@ public class AdviceFragment extends Fragment {
         recyclerView = view.findViewById(R.id.advice_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adviceList.add(new Advice(1,
-                "Comment compenser le manque",
-                "Pour compenser un manque de cigarette, vous pouvez commencer par essayer de faire des activités sportives ou boire de l'eau."));
+        adviceList.add(new Advice(1, "A la place d'une cigarette habituelle, essayé de changé celle-ci en prenant un café ou un verre d'eau."));
 
         adapter = new AdviceAdapter(getActivity(), adviceList);
         recyclerView.setAdapter(adapter);

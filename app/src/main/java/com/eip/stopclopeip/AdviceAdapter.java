@@ -29,7 +29,6 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
     @Override
     public void onBindViewHolder(AdviceViewHolder holder, int position) {
         Advice advice = AdviceList.get(position);
-        holder.mTitle.setText(advice.getTitle());
         holder.mContent.setText(advice.getContent());
     }
 
@@ -45,12 +44,10 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
     }
 
     class AdviceViewHolder extends RecyclerView.ViewHolder {
-        TextView mTitle;
         TextView mContent;
 
         public AdviceViewHolder(View itemView) {
             super(itemView);
-            mTitle = itemView.findViewById(R.id.title);
             mContent = itemView.findViewById(R.id.content);
         }
     }
