@@ -39,6 +39,7 @@ import javax.security.auth.callback.Callback;
 
 public class HomeFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    RequestQueue queue;
     private ProgressBar mProgress;
     private RelativeLayout mHomeForm;
     private ConstraintLayout mErrorForm;
@@ -111,7 +112,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void getRecord() {
-        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+        queue = Volley.newRequestQueue(this.getActivity());
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                 + "&function=sevrage.record&email="
@@ -133,16 +134,22 @@ public class HomeFragment extends Fragment {
                             JSONObject jsonDate2 = new JSONObject(jsonData.getString("date2"));
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
                             try {
-                                TextView recordValue = getView().findViewById(R.id.record_value);
+                                TextView recordValue = null;
+                                try {
+                                    recordValue = getView().findViewById(R.id.record_value);
+                                } catch (NullPointerException e) {
+                                    System.out.println(e);
+                                }
 
                                 final Date date1 = format.parse(jsonDate1.getString("date"));
                                 final Date date2 = format.parse(jsonDate2.getString("date"));
                                 long diff = Math.abs(date2.getTime() - date1.getTime());
 
-                                recordValue.setText(String.format("%02d : %02d : %02d",
-                                        TimeUnit.MILLISECONDS.toDays(diff),
-                                        TimeUnit.MILLISECONDS.toHours(diff) % 24,
-                                        TimeUnit.MILLISECONDS.toMinutes(diff) % 60));
+                                if (recordValue != null)
+                                    recordValue.setText(String.format("%02d : %02d : %02d",
+                                            TimeUnit.MILLISECONDS.toDays(diff),
+                                            TimeUnit.MILLISECONDS.toHours(diff) % 24,
+                                            TimeUnit.MILLISECONDS.toMinutes(diff) % 60));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -171,7 +178,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void getDateClop(final CallBack onCallBack) {
-        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+        queue = Volley.newRequestQueue(this.getActivity());
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                 + "&function=sevrage.time&email="
@@ -224,25 +231,29 @@ public class HomeFragment extends Fragment {
     }
 
     void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        mHomeForm.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
+            mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mHomeForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mHomeForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
 
-        mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgress.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
     }
 
     void showError(final boolean show) {

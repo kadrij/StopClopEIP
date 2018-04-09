@@ -93,11 +93,6 @@ public class StatFragment extends Fragment {
                             e.printStackTrace();
                         }
                         try {
-                            BarChart barChart = view.findViewById(R.id.pression_chart);
-                            LineChart lineChart = view.findViewById(R.id.money_chart);
-                            TextView instMoney = view.findViewById(R.id.installation_value);
-                            TextView weekMoney = view.findViewById(R.id.week_value);
-
                             JSONObject userData;
                             final String labels[] = new String[7];
                             int red[] = new int[7];
@@ -113,23 +108,19 @@ public class StatFragment extends Fragment {
 
                             String data = jsonResponse.getString("data");
                             JSONArray userArray = new JSONArray(data);
-
                             for (int i = 0; i < userArray.length(); i++) {
                                 userData = userArray.getJSONObject(i);
                                 if (userData.getString("button").equals("BLUE"))
                                     blueTotalInstallation++;
                                 else if (userData.getString("button").equals("RED"))
                                     redTotalInstallation++;
-
                             }
-
                             for (int i = 0; i < 7; i++) {
                                 Calendar cal = Calendar.getInstance();
                                 cal.add(Calendar.DATE, i * -1);
                                 date = cal.getTime();
                                 labels[i] = (DateFormat.format("dd/MM", Math.abs(date.getTime()))).toString();
                             }
-
                             for (int i = 0; i < userArray.length(); i++) {
                                 userData = userArray.getJSONObject(i);
                                 date = format.parse(userData.getString("date"));
@@ -144,75 +135,13 @@ public class StatFragment extends Fragment {
                                         black[day]++;
                                 }
                             }
-
-                            barChart.getDescription().setEnabled(false);
-                            barChart.getXAxis().setDrawGridLines(false);
-
-                            XAxis xvalButton = barChart.getXAxis();
-                            xvalButton.setDrawLabels(true);
-                            xvalButton.setValueFormatter(new IAxisValueFormatter() {
-                                @Override
-                                public String getFormattedValue(float value, AxisBase axis) {
-                                    return labels[6 - (int)value];
-                                }
-                            });
-
                             for (int i = 0; i < red.length; i++) {
                                 blueTotalWeek += blue[i];
                                 redTotalWeek += red[i];
                             }
-
-                            List<BarEntry> entriesGroup1 = new ArrayList<>();
-                            List<BarEntry> entriesGroup2 = new ArrayList<>();
-                            List<BarEntry> entriesGroup3 = new ArrayList<>();
-
-                            for (int i = 0; i < red.length; i++) {
-                                entriesGroup1.add(new BarEntry(i, red[6 - i]));
-                                entriesGroup2.add(new BarEntry(i, blue[6 - i]));
-                                entriesGroup3.add(new BarEntry(i, black[6 - i]));
-                            }
-
-                            BarDataSet set1 = new BarDataSet(entriesGroup1, "Habitudes évitée(s)");
-                            BarDataSet set2 = new BarDataSet(entriesGroup2, "Cigarettes évitée(s)");
-                            BarDataSet set3 = new BarDataSet(entriesGroup3, "Cigarettes fumée(s)");
-
-                            set1.setColor(getResources().getColor(R.color.RedButton));
-                            set2.setColor(getResources().getColor(R.color.BlueButton));
-                            set3.setColor(getResources().getColor(R.color.BlackButton));
-
-                            float groupSpace = 0.4f;
-                            float barSpace = 0f;
-                            float barWidth = 0.20f;
-
-                            BarData barData = new BarData(set1, set2, set3);
-                            barData.setBarWidth(barWidth);
-                            barChart.setData(barData);
-                            barChart.groupBars(-0.50f, groupSpace, barSpace);
-                            barChart.invalidate();
-
-                            lineChart.getDescription().setEnabled(false);
-                            lineChart.getXAxis().setDrawGridLines(false);
-
-                            List<Entry> lineEntries = new ArrayList<>();
-                            for (int i = 0; i < red.length; i++)
-                                lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[6 - i] + red[6 - i]) * 0.425))));
-
-                            XAxis xvalMoney = lineChart.getXAxis();
-                            xvalMoney.setDrawLabels(true);
-                            xvalMoney.setValueFormatter(new IAxisValueFormatter() {
-                                @Override
-                                public String getFormattedValue(float value, AxisBase axis) {
-                                    return labels[6 - (int)value];
-                                }
-                            });
-
-                            weekMoney.setText(new DecimalFormat("#.##").format((blueTotalWeek + redTotalWeek) * 0.425));
-                            instMoney.setText(new DecimalFormat("#.##").format((blueTotalInstallation + redTotalInstallation) * 0.425));
-                            LineDataSet lineSet = new LineDataSet(lineEntries, "Argent économisé");
-                            lineSet.setColor(getResources().getColor(R.color.DollarGreen));
-                            LineData lineData = new LineData(lineSet);
-                            lineChart.setData(lineData);
-                            lineChart.invalidate();
+                            setPressionChart(view, red, blue, black, labels);
+                            setMoneyChart(view, red, blue, redTotalWeek, redTotalInstallation,
+                                    blueTotalWeek, blueTotalInstallation, labels);
                             showProgress(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -240,47 +169,139 @@ public class StatFragment extends Fragment {
     }
 
     void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        mStatForm.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mStatForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
+    }
+
+    void setPressionChart(View view, int red[], int blue[], int black[], final String labels[]) {
+        BarChart barChart = view.findViewById(R.id.pression_chart);
+
+        barChart.getDescription().setEnabled(false);
+        barChart.getXAxis().setDrawGridLines(false);
+
+        XAxis xvalButton = barChart.getXAxis();
+        xvalButton.setDrawLabels(true);
+        xvalButton.setValueFormatter(new IAxisValueFormatter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            public String getFormattedValue(float value, AxisBase axis) {
+                return labels[6 - (int)value];
             }
         });
 
-        mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgress.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+        List<BarEntry> entriesGroup1 = new ArrayList<>();
+        List<BarEntry> entriesGroup2 = new ArrayList<>();
+        List<BarEntry> entriesGroup3 = new ArrayList<>();
+
+        for (int i = 0; i < red.length; i++) {
+            entriesGroup1.add(new BarEntry(i, red[6 - i]));
+            entriesGroup2.add(new BarEntry(i, blue[6 - i]));
+            entriesGroup3.add(new BarEntry(i, black[6 - i]));
+        }
+
+        BarDataSet set1 = new BarDataSet(entriesGroup1, "Habitudes évitée(s)");
+        BarDataSet set2 = new BarDataSet(entriesGroup2, "Cigarettes évitée(s)");
+        BarDataSet set3 = new BarDataSet(entriesGroup3, "Cigarettes fumée(s)");
+
+        try {
+            set1.setColor(getResources().getColor(R.color.RedButton));
+            set2.setColor(getResources().getColor(R.color.BlueButton));
+            set3.setColor(getResources().getColor(R.color.BlackButton));
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
+
+        float groupSpace = 0.4f;
+        float barSpace = 0f;
+        float barWidth = 0.20f;
+
+        BarData barData = new BarData(set1, set2, set3);
+        barData.setBarWidth(barWidth);
+        barChart.setData(barData);
+        barChart.groupBars(-0.50f, groupSpace, barSpace);
+        barChart.invalidate();
+    }
+
+    void setMoneyChart(View view, int red[], int blue[], int redTotalWeek, int redTotalInstallation,
+                       int blueTotalWeek, int blueTotalInstallation, final String labels[]) {
+        LineChart lineChart = view.findViewById(R.id.money_chart);
+        TextView instMoney = view.findViewById(R.id.installation_value);
+        TextView weekMoney = view.findViewById(R.id.week_value);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        List<Entry> lineEntries = new ArrayList<>();
+
+        for (int i = 0; i < red.length; i++)
+            lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[6 - i] + red[6 - i]) * 0.425))));
+
+        XAxis xvalMoney = lineChart.getXAxis();
+        xvalMoney.setDrawLabels(true);
+        xvalMoney.setValueFormatter(new IAxisValueFormatter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            public String getFormattedValue(float value, AxisBase axis) {
+                return labels[6 - (int)value];
             }
         });
+
+        weekMoney.setText(new DecimalFormat("#.##").format((blueTotalWeek + redTotalWeek) * 0.425));
+        instMoney.setText(new DecimalFormat("#.##").format((blueTotalInstallation + redTotalInstallation) * 0.425));
+        LineDataSet lineSet = new LineDataSet(lineEntries, "Argent économisé");
+
+        try {
+            lineSet.setColor(getResources().getColor(R.color.DollarGreen));
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
+
+        LineData lineData = new LineData(lineSet);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
     }
 
     void showError(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        mStatForm.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
+            mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mStatForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
 
-        mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
-        mErrorForm.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+            mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+            mErrorForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
     }
 
     public void Alert(String Msg) {

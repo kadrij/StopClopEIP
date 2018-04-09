@@ -362,7 +362,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             sendObjectPression("BLACK");
 
         if (onButtonFragment == true) {
-            SystemClock.sleep(500);
+            SystemClock.sleep(150);
             getPressionCount();
         }
     }

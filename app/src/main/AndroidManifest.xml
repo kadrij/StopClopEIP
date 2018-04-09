@@ -26,7 +26,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/stopclop_logo"
-        android:label="StopClopEIP"
+        android:label="StopClop\' BETA"
         android:roundIcon="@drawable/stopclop_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -44,7 +44,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="Accueil"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

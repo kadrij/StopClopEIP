@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,9 +59,9 @@ public class ButtonFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        Button red_button = view.findViewById(R.id.red_button);
-        Button blue_button = view.findViewById(R.id.blue_button);
-        Button black_button = view.findViewById(R.id.black_button);
+        FloatingActionButton red_button = view.findViewById(R.id.red_button);
+        FloatingActionButton blue_button = view.findViewById(R.id.blue_button);
+        FloatingActionButton black_button = view.findViewById(R.id.black_button);
         mProgress = view.findViewById(R.id.progressBar);
         mButtonForm = view.findViewById(R.id.button_form);
         mErrorForm = view.findViewById(R.id.error_form);
@@ -125,7 +126,7 @@ public class ButtonFragment extends Fragment {
         };
         queue.add(stringRequest);
         queue.start();
-        SystemClock.sleep(500);
+        SystemClock.sleep(150);
         getCount(view);
     }
 
@@ -209,25 +210,29 @@ public class ButtonFragment extends Fragment {
     }
 
     void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        mButtonForm.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
+            mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mButtonForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mButtonForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
 
-        mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgress.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+        System.out.println(e);
+        }
     }
 
     void showError(final boolean show) {
