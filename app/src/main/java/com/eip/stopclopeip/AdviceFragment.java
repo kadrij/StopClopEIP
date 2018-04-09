@@ -49,7 +49,9 @@ public class AdviceFragment extends Fragment {
         recyclerView = view.findViewById(R.id.advice_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adviceList.add(new Advice(1, "A la place d'une cigarette habituelle, essayé de changé celle-ci en prenant un café ou un verre d'eau."));
+        adviceList.add(new Advice(1, "Fais des exercices de respiration : allongé ou assis toi, mets tes mains sur ton ventre, respires profondément et concentre toi sur le mouvement de ton ventre.", 103, "Zen"));
+        adviceList.add(new Advice(2, "A la place d'une cigarette habituelle, essayé de changé celle-ci en prenant un café ou un verre d'eau.", 35, "Autres"));
+        adviceList.add(new Advice(3, "Manges des fruits secs.", 24, "Cuisine"));
 
         adapter = new AdviceAdapter(getActivity(), adviceList);
         recyclerView.setAdapter(adapter);

@@ -13,46 +13,48 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/login_input_form"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/login_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="vertical"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="106dp"
-                android:background="@color/colorPrimaryDark"
-                android:fontFamily="sans-serif"
-                android:paddingTop="35dp"
-                android:text="StopClop'"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="50sp" />
+            android:background="@color/colorPrimaryDark"
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="match_parent"
                 android:layout_height="156dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:adjustViewBounds="false"
                 android:background="@color/colorPrimaryDark"
                 android:contentDescription=""
                 android:cropToPadding="false"
                 android:src="@drawable/stopclop_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:ignore="ContentDescription" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:paddingTop="10dp"
-                android:textColorHint="@android:color/background_light">
+                android:textColorHint="@android:color/background_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logo">
 
                 <AutoCompleteTextView
                     android:id="@+id/email_input"
@@ -60,7 +62,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:drawableLeft="@drawable/ic_person_black_36dp"
                     android:drawableTint="@color/colorPrimary"
                     android:fontFamily="sans-serif"
                     android:hint="Adresse mail"
@@ -74,8 +75,16 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:paddingTop="5dp"
-                android:textColorHint="@android:color/background_light">
+                android:textColorHint="@android:color/background_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email">
 
                 <EditText
                     android:id="@+id/password_input"
@@ -83,7 +92,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:drawableLeft="@drawable/ic_lock_outline_black_36dp"
                     android:drawableTint="@color/colorPrimary"
                     android:hint="Mot de passe"
                     android:imeActionLabel="@string/action_sign_in"
@@ -94,30 +102,57 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="437dp"
+                android:layout_height="106dp"
+                android:background="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"
+                android:paddingTop="35dp"
+                android:text="StopClop'"
+                android:textAlignment="center"
+                android:textColor="@android:color/background_light"
+                android:textSize="50sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <Button
                 android:id="@+id/sign_in_button"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="25dp"
-                android:background="@color/colorAccent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/colorAccent"
                 android:text="Connexion"
                 android:textAllCaps="false"
                 android:textColor="@android:color/background_light"
                 android:textSize="18sp"
-                android:textStyle="normal|bold" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password" />
 
             <TextView
                 android:id="@+id/register_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
                 android:text="Vous n'avez pas de compte ?"
                 android:textAlignment="center"
                 android:textColor="@android:color/background_light"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
                 tools:ignore="RtlHardcoded" />
 
             <Button
@@ -125,8 +160,11 @@
                 style="@android:style/Widget.Material.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="29dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="100dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginStart="32dp"
                 android:background="@color/colorPrimaryDark"
                 android:onClick="SignUp"
                 android:text="Créer un compte"
@@ -135,9 +173,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
-                android:textStyle="normal|bold" />
+                android:textStyle="normal|bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/register_label"
+                app:layout_constraintVertical_bias="0.0" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
     <android.support.constraint.ConstraintLayout

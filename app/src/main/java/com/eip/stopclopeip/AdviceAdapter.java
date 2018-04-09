@@ -30,6 +30,8 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
     public void onBindViewHolder(AdviceViewHolder holder, int position) {
         Advice advice = AdviceList.get(position);
         holder.mContent.setText(advice.getContent());
+        holder.mLikeCount.setText("" + (advice.getLikes()));
+        holder.mTag.setText(advice.getTag());
     }
 
     @Override
@@ -45,10 +47,14 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
 
     class AdviceViewHolder extends RecyclerView.ViewHolder {
         TextView mContent;
+        TextView mLikeCount;
+        TextView mTag;
 
         public AdviceViewHolder(View itemView) {
             super(itemView);
             mContent = itemView.findViewById(R.id.content);
+            mLikeCount = itemView.findViewById(R.id.like_counter);
+            mTag = itemView.findViewById(R.id.tag_content);
         }
     }
 }

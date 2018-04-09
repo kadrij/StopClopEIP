@@ -7,7 +7,6 @@ import android.app.Fragment;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,26 +20,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.invoke.ConstantCallSite;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +37,6 @@ public class ButtonFragment extends Fragment {
     private ProgressBar mProgress;
     private ConstraintLayout mButtonForm;
     private ConstraintLayout mErrorForm;
-    private boolean firstGet = false;
 
     public ButtonFragment() {
     }
@@ -195,8 +182,10 @@ public class ButtonFragment extends Fragment {
                             black_count.setText("" + black);
                             showProgress(false);
                         } catch (JSONException e) {
+                            showProgress(false);
                             e.printStackTrace();
                         } catch (ParseException e) {
+                            showProgress(false);
                             e.printStackTrace();
                         }
                     }

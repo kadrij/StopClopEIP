@@ -61,19 +61,16 @@ public class LoginActivity extends Activity {
             public void onClick(View view) {
                 showProgress(true);
                 if (mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
-                    mEmail.setError("An Email or Username is requiered");
-                    mPassword.setError("A password is requiered");
-                    Alert("Login and password requiered.");
+                    mEmail.setError("Une adresse mail est requise");
+                    mPassword.setError("Un mot de passe est requis");
                     showProgress(false);
                     logError[0] = true;
                 } else if (mEmail.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
-                    mEmail.setError("An Email or Username is requiered");
-                    Alert("An Email or Username is requiered.");
+                    mEmail.setError("Une adresse mail est requise");
                     showProgress(false);
                     logError[0] = true;
                 } else if (!mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
-                    mPassword.setError("A password is requiered");
-                    Alert("A password is requiered.");
+                    mPassword.setError("Un mot de passe est requis");
                     showProgress(false);
                     logError[0] = true;
                 } else {
@@ -98,14 +95,14 @@ public class LoginActivity extends Activity {
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     intent.putExtra("token", jsonData.getString("token"));
                                     intent.putExtra("email", mEmail.getText().toString());
-                                    showProgress(false);
                                     startActivity(intent);
+                                    showProgress(false);
                                 } else {
                                     mEmail.setError("Adresse mail ou mot de passe incorrecte");
                                     showProgress(false);
                                 }
                             } catch (JSONException e) {
-                                Alert("Cannot connect to server.");
+                                Alert("Impossible de se connecter au serveur");
                                 showProgress(false);
                                 e.printStackTrace();
                             }
@@ -113,7 +110,7 @@ public class LoginActivity extends Activity {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Alert("Cannot connect to server.");
+                            Alert("Impossible de se connecter au serveur");
                             showProgress(false);
                         }
                     }) {
