@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
                                     intent.putExtra("token", jsonData.getString("token"));
                                     intent.putExtra("email", mEmail.getText().toString());
                                     startActivity(intent);
-                                    showProgress(false);
+                                    finish();
                                 } else {
                                     mEmail.setError("Adresse mail ou mot de passe incorrecte");
                                     showProgress(false);

@@ -14,7 +14,7 @@
             android:title="Boutons" />
         <item
             android:id="@+id/nav_graph"
-            android:icon="@drawable/ic_insert_chart_black_36dp"
+            android:icon="@drawable/statistiques"
             android:title="Statistiques" />
         <item
             android:id="@+id/nav_advice"
@@ -22,8 +22,16 @@
             android:title="Conseils" />
         <item
             android:id="@+id/nav_contacts"
-            android:icon="@drawable/ic_phone_black_36dp"
+            android:icon="@drawable/contact"
             android:title="Contacts" />
     </group>
+
+    <item android:title="Autre">
+        <menu>
+            <item
+                android:id="@+id/nav_disconnect"
+                android:title="Deconnexion" />
+        </menu>
+    </item>
 
 </menu>

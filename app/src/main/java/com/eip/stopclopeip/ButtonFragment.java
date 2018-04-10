@@ -126,7 +126,7 @@ public class ButtonFragment extends Fragment {
         };
         queue.add(stringRequest);
         queue.start();
-        SystemClock.sleep(150);
+        SystemClock.sleep(75);
         getCount(view);
     }
 
@@ -169,11 +169,11 @@ public class ButtonFragment extends Fragment {
                                 long diff = Math.abs(currentDate.getTime() - date.getTime());
                                 int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
                                 if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
-                                    if (userData.getString("button").equals("BLUE"))
+                                    if (userData.getString("button").equals("BLUE") && blue <= 99999)
                                         blue++;
-                                    else if (userData.getString("button").equals("RED"))
+                                    else if (userData.getString("button").equals("RED") && red <= 99999)
                                         red++;
-                                    else
+                                    else if (userData.getString("button").equals("BLACK") && black <= 99999)
                                         black++;
                                 }
                             }

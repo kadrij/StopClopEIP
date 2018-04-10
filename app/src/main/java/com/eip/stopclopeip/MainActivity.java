@@ -1,5 +1,6 @@
 package com.eip.stopclopeip;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -112,35 +113,32 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         bundle.putString("token", getIntent().getStringExtra("token"));
         bundle.putString("email", getIntent().getStringExtra("email"));
 
+        Fragment mFragment = null;
         if (id == R.id.nav_home) {
             toolbar.setTitle("Accueil");
-            HomeFragment mFragment = new HomeFragment();
-            mFragment.setArguments(bundle);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
+            mFragment = new HomeFragment();
         } else if (id == R.id.nav_button) {
             toolbar.setTitle("Boutons");
             onButtonFragment = true;
-            ButtonFragment mFragment = new ButtonFragment();
-            mFragment.setArguments(bundle);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
+            mFragment = new ButtonFragment();
         } else if (id == R.id.nav_graph) {
             toolbar.setTitle("Statistiques");
-            StatFragment mFragment = new StatFragment();
-            mFragment.setArguments(bundle);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
+            mFragment = new StatFragment();
         } else if (id == R.id.nav_advice) {
             toolbar.setTitle("Conseils");
-            AdviceFragment mFragment = new AdviceFragment();
-            mFragment.setArguments(bundle);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
+            mFragment = new AdviceFragment();
         } else if (id == R.id.nav_contacts) {
             toolbar.setTitle("Contacts");
-            ContactFragment mFragment = new ContactFragment();
+            mFragment = new ContactFragment();
+        } else if (id == R.id.nav_disconnect) {
+            disconnect();
+        }
+
+        if (mFragment != null) {
             mFragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -292,6 +290,27 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         }
     }
 
+    public void disconnect() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Voulez-vous vraiment vous déconnecter ?")
+                .setCancelable(false)
+                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Votre GPS semble désactivé, pour le bon fonctionnement de l'application, il est préférable de l'activer.")
@@ -362,7 +381,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             sendObjectPression("BLACK");
 
         if (onButtonFragment == true) {
-            SystemClock.sleep(150);
+            SystemClock.sleep(75);
             getPressionCount();
         }
     }
