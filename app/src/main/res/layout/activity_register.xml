@@ -10,13 +10,13 @@
         android:id="@+id/register_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/cardview_light_background">
 
         <LinearLayout
             android:id="@+id/register_input_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/cardview_light_background"
             android:orientation="vertical"
             android:weightSum="1">
 
@@ -27,7 +27,7 @@
                 android:layout_marginBottom="50dp"
                 android:layout_marginTop="50dp"
                 android:adjustViewBounds="false"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/cardview_light_background"
                 android:contentDescription=""
                 android:cropToPadding="false"
                 android:src="@drawable/stopclop_logo"
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingTop="10dp"
-                android:textColorHint="@android:color/background_light">
+                android:textColorHint="@color/BlackButton">
 
                 <AutoCompleteTextView
                     android:id="@+id/email_input"
@@ -47,13 +47,12 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="15dp"
-                    android:drawableLeft="@drawable/ic_email_black_36dp"
                     android:drawableTint="@color/colorPrimary"
                     android:fontFamily="sans-serif"
                     android:hint="Adresse mail"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:textColor="?attr/colorAccent" />
+                    android:textColor="@color/BlackButton" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -62,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingTop="10dp"
-                android:textColorHint="@android:color/background_light">
+                android:textColorHint="@android:color/background_dark">
 
 
                 <EditText
@@ -72,14 +71,13 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="15dp"
-                    android:drawableLeft="@drawable/ic_lock_outline_black_36dp"
                     android:drawableTint="@color/colorPrimary"
                     android:hint="Mot de passe"
                     android:imeActionLabel="@string/action_sign_in"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/BlackButton" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -89,8 +87,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="23dp"
                 android:layout_marginRight="23dp"
+                android:paddingTop="20dp"
                 android:text="Date de naissance"
-                android:textColor="@android:color/background_light"
+                android:textColor="@color/BlackButton"
                 android:textSize="12sp" />
 
             <android.support.design.widget.TextInputLayout
@@ -112,7 +111,7 @@
                     android:layout_weight="0.06"
                     android:onClick="datePicker"
                     android:text="00-00-0000"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/BlackButton"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </android.support.design.widget.TextInputLayout>
@@ -125,11 +124,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="40dp"
-                android:background="@color/colorAccent"
                 android:onClick="registerAccount"
-                android:text="Enregistrer"
+                android:text="S'inscrire"
                 android:textAllCaps="false"
                 android:textColor="@android:color/background_light"
+                android:backgroundTint="@color/colorAccent"
                 android:textSize="18sp"
                 android:textStyle="normal|bold" />
 

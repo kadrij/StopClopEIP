@@ -50,6 +50,10 @@
         <item>-1</item>
     </string-array>
 
+    <string name="sport_desc">Tout d’abord, avoir un objectif sportif donne une excellente motivation pour arrêter de fumer.  L’arrêt du tabac va en effet améliorer la condition physique et ainsi faciliter l’accès des objectifs de performance ou de réalisation d’activité physique. \n- Ensuite, la pratique d’activités physiques régulières (pas forcément intenses) aide à combattre les états physiologiques, comportementaux et psychologiques de manque, ainsi que le stress, le désir de fumer, etc… \n- Un autre effet bénéfique de l’activité physique est un meilleur contrôle du poids. En effet, la peur de la prise de poids est un frein pour beaucoup de fumeur souhaitant arrêter. Or, en pratiquent un sport, cette prise de poids peut être limitée.\n- Enfin, en dehors des effets liés au tabac, la pratique d’une activité physique régulière procure un sentiment de bien-être. Ainsi, le sport aide à soulager les symptômes dépressifs et d’anxiété et permet de garder un bon moral.</string>
+    <string name="other_desc">Café et tabac font généralement bon ménage… Comme vous avez sûrement pu le constater rares sont les fumeurs qui n’aiment pas le café !\n\nEn période de sevrage vous devez absolument éviter de boire du café car ce dernier peut déclencher des envies de fumer. Plusieurs études ont clairement mis en évidence un lien entre café et tabac. Si certains aliments ont tendance à couper l’envie de fumer, avec le café c’est l’exacte inverse qui se produit ! La caféine stimule le manque de nicotine et il est alors beaucoup plus difficile de résister.</string>
+    <string name="zen_desc"> A chaque fois que vous aurez envie de fumer, il s’agira de répéter un petit rituel : celui des 3 minutes d’espace de respiration. Simulation :\n\nVous avez envie d’une cigarette. Avant de vous jeter sur votre paquet, isolez-vous au calme, respirez profondément, et posez-vous les questions suivantes : qu’est-ce que je ressens en ce moment ? A quoi suis-je en train de penser ? Y a-t-il des choses qui m’inquiètent, me stressent ? Cette première réflexion doit durer une minute.\nPendant encore une minute, concentrez-vous sur votre respiration. Inspirez profondément, expirez lentement.\nEnfin, focalisez-vous sur vos sensations pendant une minute. Suis-je en forme ? Suis-je fatiguée ? La position dans laquelle je suis est-elle confortable ?</string>
+
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
@@ -105,4 +109,5 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_scan">ScanActivity</string>
     <string name="action_search">action_search</string>
+    <string name="title_activity_desc">DescActivity</string>
 </resources>

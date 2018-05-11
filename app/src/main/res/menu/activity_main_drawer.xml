@@ -20,10 +20,10 @@
             android:id="@+id/nav_advice"
             android:icon="@drawable/ic_chat_bubble_outline_black_36dp"
             android:title="Conseils" />
-        <item
+        <!--item
             android:id="@+id/nav_contacts"
             android:icon="@drawable/contact"
-            android:title="Contacts" />
+            android:title="Contacts" /-->
     </group>
 
     <item android:title="Autre">

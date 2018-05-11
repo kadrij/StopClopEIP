@@ -51,10 +51,6 @@ public class LoginActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         final Boolean[] logError = {false};
 
-        TextView textViewCustom = findViewById(R.id.title);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/stopclop_font.ttf");
-        textViewCustom.setTypeface(custom_font);
-
         final Button mEmailSignInButton = findViewById(R.id.sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
