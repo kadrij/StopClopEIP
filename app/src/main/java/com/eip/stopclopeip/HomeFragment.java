@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 import javax.security.auth.callback.Callback;
 
 public class HomeFragment extends Fragment {
-    String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    String url = "http://romain-caldas.fr/api/rest.php?dev=";
     RequestQueue queue;
     private ProgressBar mProgress;
     private RelativeLayout mHomeForm;
@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
         queue = Volley.newRequestQueue(this.getActivity());
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                + "&function=sevrage.record&email="
+                + "&function=sevrage.record&dev=69&email="
                 + getArguments().getString("email")
                 + "&token="
                 + getArguments().getString("token"),
@@ -124,6 +124,7 @@ public class HomeFragment extends Fragment {
                     public void onResponse(String response) {
                         JSONObject jsonResponse = null;
                         try {
+                            Log.v("Response", response);
                             jsonResponse = new JSONObject(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -181,7 +182,7 @@ public class HomeFragment extends Fragment {
         queue = Volley.newRequestQueue(this.getActivity());
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                + "&function=sevrage.time&email="
+                + "&function=sevrage.time&dev=69&email="
                 + getArguments().getString("email")
                 + "&token="
                 + getArguments().getString("token")

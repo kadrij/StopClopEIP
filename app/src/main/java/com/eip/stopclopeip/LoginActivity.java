@@ -36,6 +36,7 @@ public class LoginActivity extends Activity {
     private EditText mPassword;
     private ProgressBar mProgress;
     private ScrollView mLoginForm;
+    private Button mSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class LoginActivity extends Activity {
         mLoginForm = findViewById(R.id.login_form);
         mEmail = findViewById(R.id.email_input);
         mPassword = findViewById(R.id.password_input);
+        mSignUp = findViewById(R.id.register_button);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         final Boolean[] logError = {false};
@@ -121,6 +123,14 @@ public class LoginActivity extends Activity {
                 }
             }
         });
+
+        mSignUp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     void showProgress(final boolean show) {
@@ -143,11 +153,6 @@ public class LoginActivity extends Activity {
                 mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
-    }
-
-    void SignUp(View view) {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivity(intent);
     }
 
     void Alert(String Msg) {

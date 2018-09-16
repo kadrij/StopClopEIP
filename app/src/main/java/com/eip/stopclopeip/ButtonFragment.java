@@ -69,10 +69,15 @@ public class ButtonFragment extends Fragment {
         showProgress(true);
         getCount(view);
 
+        final TextView red_count = view.findViewById(R.id.red_count);
+        final TextView blue_count = view.findViewById(R.id.blue_count);
+        final TextView black_count = view.findViewById(R.id.black_count);
+
         red_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendPression(view, "RED");
+                red_count.setText("" + (Integer.parseInt(red_count.getText().toString()) + 1));
             }
         });
 
@@ -80,6 +85,7 @@ public class ButtonFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendPression(view, "BLUE");
+                blue_count.setText("" + (Integer.parseInt(blue_count.getText().toString()) + 1));
             }
         });
 
@@ -87,6 +93,7 @@ public class ButtonFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendPression(view, "BLACK");
+                black_count.setText("" + (Integer.parseInt(black_count.getText().toString()) + 1));
             }
         });
     }
@@ -126,8 +133,7 @@ public class ButtonFragment extends Fragment {
         };
         queue.add(stringRequest);
         queue.start();
-        SystemClock.sleep(75);
-        getCount(view);
+        //getCount(view);
     }
 
     private void getCount(final View view) {
