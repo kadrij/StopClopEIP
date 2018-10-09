@@ -71,6 +71,12 @@ public class BluetoothLeService extends Service {
     		mCharacteristicValue=characteristicValue;
     	}
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return Service.START_STICKY;
+    }
+
     //ring buffer
     private RingBuffer<BluetoothGattCharacteristicHelper> mCharacteristicRingBuffer = new RingBuffer<BluetoothGattCharacteristicHelper>(8);
 

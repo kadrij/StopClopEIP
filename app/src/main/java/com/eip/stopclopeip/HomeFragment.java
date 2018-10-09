@@ -3,9 +3,10 @@ package com.eip.stopclopeip;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.constraint.ConstraintLayout;
-import android.text.format.DateFormat;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,14 +36,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.security.auth.callback.Callback;
-
 public class HomeFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=";
     RequestQueue queue;
     private ProgressBar mProgress;
-    private RelativeLayout mHomeForm;
+    private ScrollView mHomeForm;
     private ConstraintLayout mErrorForm;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     public HomeFragment() {
     }
@@ -109,6 +110,15 @@ public class HomeFragment extends Fragment {
         });
         sevrageTime.start();
         getRecord();
+
+        tabLayout = view.findViewById(R.id.collection_tab);
+        viewPager = view.findViewById(R.id.collection_view);
+        ViewCollectionAdapter adapter = new ViewCollectionAdapter(getChildFragmentManager());
+        adapter.AddFragment(new HomeAdviceFragment());
+        adapter.AddFragment(new HomePressionFragment());
+        adapter.AddFragment(new HomeAchievmentFragment());
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void getRecord() {

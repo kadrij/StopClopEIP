@@ -1,7 +1,8 @@
 package com.eip.stopclopeip;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.annotation.SuppressLint;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -46,11 +48,13 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     boolean onButtonFragment = false;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setElevation(0);
         setSupportActionBar(toolbar);
 
         onCreateProcess();
@@ -67,7 +71,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         toolbar.setTitle("Accueil");
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("token", getIntent().getStringExtra("token"));
         bundle.putString("email", getIntent().getStringExtra("email"));
@@ -109,7 +113,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         int id = item.getItemId();
         onButtonFragment = false;
         Toolbar toolbar = findViewById(R.id.toolbar);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("token", getIntent().getStringExtra("token"));
         bundle.putString("email", getIntent().getStringExtra("email"));
@@ -181,8 +185,18 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         queue.start();
     }
 
-    private void getPressionCount() {
-        final RequestQueue queue = Volley.newRequestQueue(this);
+    private void getPressionCount(String button) {
+        TextView red_count = findViewById(R.id.red_count);
+        TextView blue_count = findViewById(R.id.blue_count);
+        TextView black_count = findViewById(R.id.black_count);
+
+        if (button.equals("red"))
+            red_count.setText("" + (Integer.valueOf(red_count.getText().toString()) + 1));
+        else if (button.equals("blue"))
+            blue_count.setText("" + (Integer.valueOf(blue_count.getText().toString()) + 1));
+        else if (button.equals("black"))
+            black_count.setText("" + (Integer.valueOf(black_count.getText().toString()) + 1));
+        /*final RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                 + "&function=coordonnee.get&email="
@@ -252,7 +266,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             }
         };
         queue.add(stringRequest);
-        queue.start();
+        queue.start();*/
     }
 
     public void showNotification(String Msg) {
@@ -374,6 +388,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
     @Override
     public void onSerialReceived(String theString) {
+        Log.e("Serial", theString);
         if (theString.equals("red"))
             sendObjectPression("RED");
         else if (theString.equals("blue"))
@@ -382,8 +397,8 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             sendObjectPression("BLACK");
 
         if (onButtonFragment == true) {
-            SystemClock.sleep(75);
-            getPressionCount();
+            //SystemClock.sleep(75);
+            getPressionCount(theString);
         }
     }
 }

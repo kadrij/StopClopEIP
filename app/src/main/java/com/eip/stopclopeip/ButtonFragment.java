@@ -3,14 +3,12 @@ package com.eip.stopclopeip;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.os.SystemClock;
+import android.support.v4.app.Fragment;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,13 +29,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.android.gms.internal.zzahf.runOnUiThread;
 
 public class ButtonFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     private ProgressBar mProgress;
     private ConstraintLayout mButtonForm;
     private ConstraintLayout mErrorForm;
+    FloatingActionButton red_button;
+    FloatingActionButton blue_button;
+    FloatingActionButton black_button;
 
     public ButtonFragment() {
     }
@@ -59,9 +64,9 @@ public class ButtonFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        FloatingActionButton red_button = view.findViewById(R.id.red_button);
-        FloatingActionButton blue_button = view.findViewById(R.id.blue_button);
-        FloatingActionButton black_button = view.findViewById(R.id.black_button);
+        red_button = view.findViewById(R.id.red_button);
+        blue_button = view.findViewById(R.id.blue_button);
+        black_button = view.findViewById(R.id.black_button);
         mProgress = view.findViewById(R.id.progressBar);
         mButtonForm = view.findViewById(R.id.button_form);
         mErrorForm = view.findViewById(R.id.error_form);
@@ -78,6 +83,7 @@ public class ButtonFragment extends Fragment {
             public void onClick(View v) {
                 sendPression(view, "RED");
                 red_count.setText("" + (Integer.parseInt(red_count.getText().toString()) + 1));
+                buttonDelay();
             }
         });
 
@@ -86,6 +92,7 @@ public class ButtonFragment extends Fragment {
             public void onClick(View v) {
                 sendPression(view, "BLUE");
                 blue_count.setText("" + (Integer.parseInt(blue_count.getText().toString()) + 1));
+                buttonDelay();
             }
         });
 
@@ -94,8 +101,32 @@ public class ButtonFragment extends Fragment {
             public void onClick(View v) {
                 sendPression(view, "BLACK");
                 black_count.setText("" + (Integer.parseInt(black_count.getText().toString()) + 1));
+                buttonDelay();
             }
         });
+    }
+
+    private void buttonDelay() {
+        red_button.setEnabled(false);
+        blue_button.setEnabled(false);
+        black_button.setEnabled(false);
+
+        Timer buttonTimer = new Timer();
+        buttonTimer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        red_button.setEnabled(true);
+                        blue_button.setEnabled(true);
+                        black_button.setEnabled(true);
+                    }
+                });
+            }
+        }, 3000);
     }
 
     private void sendPression(View view, String color){

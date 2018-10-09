@@ -1,8 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:visibility="visible"
     tools:context="com.eip.stopclopeip.HomeFragment">
 
     <android.support.constraint.ConstraintLayout
@@ -13,10 +14,6 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -25,7 +22,11 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -36,11 +37,6 @@
 
         <ImageView
             android:id="@+id/error_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/error_message"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.86"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginBottom="8dp"
@@ -49,14 +45,15 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_error_36dp" />
-
-        <TextView
-            android:id="@+id/error_message"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/ic_error_36dp"
+            app:layout_constraintBottom_toBottomOf="@+id/error_message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.86" />
+
+        <TextView
+            android:id="@+id/error_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -67,109 +64,152 @@
             android:layout_marginTop="8dp"
             android:text="Une erreur est survenue"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:id="@+id/home_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/background_light"
-        tools:context="com.stopclop.HomeFragment">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/sevrage_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="46dp"
-            android:text="Aucune consomation depuis"
-            android:textColor="@color/black_overlay"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/day_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/record_label"
-            android:layout_alignLeft="@+id/sevrage_value"
-            android:layout_alignStart="@+id/sevrage_value"
-            android:layout_marginLeft="7dp"
-            android:layout_marginStart="7dp"
-            android:gravity="end"
-            android:text="Jours"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/black_overlay"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/hour_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sevrage_value"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:text="Heures"
-            android:textColor="@color/black_overlay"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/minute_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/hour_label"
-            android:layout_alignBottom="@+id/hour_label"
-            android:layout_alignEnd="@+id/sevrage_value"
-            android:text="Minutes"
-            android:textColor="@color/black_overlay"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/record_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/sevrage_label"
-            android:layout_alignStart="@+id/sevrage_label"
-            android:layout_below="@+id/hour_label"
-            android:layout_marginTop="8dp"
-            android:text="Record personnel :"
-            android:textColor="@android:color/holo_red_light" />
-
-        <TextView
-            android:id="@+id/record_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/cactos_image"
-            android:layout_toEndOf="@+id/record_label"
-            android:layout_toRightOf="@+id/record_label"
-            android:paddingLeft="10dp"
-            android:text="00 : 00 : 00"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_red_light" />
-
-        <ImageView
-            android:id="@+id/cactos_image"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/home_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/record_label"
-            android:layout_marginTop="35dp"
-            android:src="@drawable/cactos_le_cactus"
-            android:visibility="visible" />
+            android:background="@android:color/background_light"
+            tools:context="com.stopclop.HomeFragment">
 
-        <Chronometer
-            android:id="@+id/sevrage_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sevrage_label"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:format="00 : 00 : 00"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="45sp" />
+            <TextView
+                android:id="@+id/sevrage_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="46dp"
+                android:text="Aucune consomation depuis"
+                android:textColor="@color/black_overlay"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/day_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
+                android:gravity="end"
+                android:text="Jours"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/black_overlay"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@+id/record_label"
+                app:layout_constraintLeft_toLeftOf="@+id/sevrage_value"
+                app:layout_constraintStart_toStartOf="@+id/sevrage_value" />
+
+            <TextView
+                android:id="@+id/hour_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Heures"
+                android:textColor="@color/black_overlay"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sevrage_value" />
+
+            <TextView
+                android:id="@+id/minute_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minutes"
+                android:textColor="@color/black_overlay"
+                android:textSize="15sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/hour_label"
+                app:layout_constraintBottom_toBottomOf="@+id/hour_label"
+                app:layout_constraintEnd_toEndOf="@+id/sevrage_value" />
+
+            <TextView
+                android:id="@+id/record_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Record personnel :"
+                android:textColor="@android:color/holo_red_light"
+                app:layout_constraintLeft_toLeftOf="@+id/sevrage_label"
+                app:layout_constraintStart_toStartOf="@+id/sevrage_label"
+                app:layout_constraintTop_toBottomOf="@+id/hour_label" />
+
+            <TextView
+                android:id="@+id/record_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="10dp"
+                android:text="00 : 00 : 00"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_red_light"
+                app:layout_constraintLeft_toRightOf="@+id/record_label"
+                app:layout_constraintStart_toEndOf="@+id/record_label"
+                app:layout_constraintTop_toBottomOf="@+id/hour_label" />
+
+            <ImageView
+                android:id="@+id/cactos_image"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:layout_marginTop="52dp"
+                android:src="@drawable/cactos_le_cactus"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/record_label" />
+
+            <Chronometer
+                android:id="@+id/sevrage_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:format="00 : 00 : 00"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="45sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sevrage_label" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/collection_view"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cactos_image">
+
+            </android.support.v4.view.ViewPager>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/collection_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/collection_view"
+                app:layout_constraintVertical_bias="0.0"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </FrameLayout>

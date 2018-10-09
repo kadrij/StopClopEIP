@@ -1,23 +1,62 @@
 package com.eip.stopclopeip;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.constraint.ConstraintLayout;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
-public class StatFragment extends Fragment {
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    public StatFragment() {
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+public class StatFragmentCopy extends Fragment {
+    String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    private ProgressBar mProgress;
+    private ConstraintLayout mErrorForm;
+    private ConstraintLayout mStatForm;
+
+    public StatFragmentCopy() {
     }
 
-    public static StatFragment newInstance(String param1, String param2) {
-        StatFragment fragment = new StatFragment();
+    public static StatFragmentCopy newInstance(String param1, String param2) {
+        StatFragmentCopy fragment = new StatFragmentCopy();
         return fragment;
     }
 
@@ -33,26 +72,6 @@ public class StatFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        tabLayout = view.findViewById(R.id.stat_tab);
-        viewPager = view.findViewById(R.id.viewpager_id);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-
-        adapter.AddFragment(new PressionFragment(), "Pressions");
-        adapter.AddFragment(new MoneyFragment(), "Economies");
-
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-    }
-}
-
-
-        /*
-        String url = "http://romain-caldas.fr/api/rest.php?dev=69";
-        private ProgressBar mProgress;
-        private ConstraintLayout mErrorForm;
-         private ConstraintLayout mStatForm;
-
-        ------
         final RequestQueue queue = Volley.newRequestQueue(this.getActivity());
         mProgress = view.findViewById(R.id.progressBar);
         mStatForm = view.findViewById(R.id.stat_form);
@@ -175,7 +194,7 @@ public class StatFragment extends Fragment {
         }
     }
 
-    /*void setPressionChart(View view, int red[], int blue[], int black[], final String labels[]) {
+    void setPressionChart(View view, int red[], int blue[], int black[], final String labels[]) {
         BarChart barChart = view.findViewById(R.id.pression_chart);
 
         barChart.getDescription().setEnabled(false);
@@ -286,4 +305,7 @@ public class StatFragment extends Fragment {
     }
 
     public void Alert(String Msg) {
-        Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();*/
+        Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();
+    }
+}
+

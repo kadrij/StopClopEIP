@@ -1,7 +1,11 @@
 package com.eip.stopclopeip;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -20,10 +24,7 @@ import java.util.List;
 
 public class AdviceFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
-    RecyclerView recyclerView;
-    AdviceAdapter adapter;
-    List<Advice> adviceList;
-    SearchView searchView;
+    private CardView zenCard;
 
     public AdviceFragment() {}
 
@@ -44,7 +45,17 @@ public class AdviceFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        adviceList = new ArrayList<>();
+        zenCard = view.findViewById(R.id.zen_card);
+        zenCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_in_left);
+                fragmentTransaction.replace(R.id.content_frame, new AdviceListFragment()).addToBackStack(null).commit();
+            }
+        });
+        /*adviceList = new ArrayList<>();
 
         recyclerView = view.findViewById(R.id.advice_list);
         recyclerView.setHasFixedSize(true);
@@ -66,7 +77,7 @@ public class AdviceFragment extends Fragment {
                 false));
 
         adapter = new AdviceAdapter(getActivity(), adviceList);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);*/
     }
 
     public void Alert(String Msg) {
@@ -76,48 +87,5 @@ public class AdviceFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        /*final MenuItem search = menu.findItem(R.id.action_search);
-        searchView = (SearchView) search.getActionView();
-        ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHintTextColor(getResources().getColor(R.color.white));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                if (!searchView.isIconified())
-                    searchView.setIconified(true);
-                search.collapseActionView();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                final List<Advice> filtermodelist = filter(adviceList, s);
-                adapter.setFilter(filtermodelist);
-                    Log.v("Recherche", s);
-                return true;
-            }
-        });*/
     }
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_search) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private List<Advice> filter(List<Advice> pl, String query) {
-        query = query.toLowerCase();
-
-        final List<Advice> filteredModelList = new ArrayList<>();
-        for (Advice model:pl) {
-            final String text = model.getTitle().toLowerCase();
-            if (text.contains(query))
-                filteredModelList.add(model);
-        }
-        return filteredModelList;
-    }*/
 }
