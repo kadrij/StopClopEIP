@@ -81,16 +81,10 @@ public class ButtonFragment extends Fragment {
 
         locationManager = (LocationManager) getActivity().getSystemService(getContext().LOCATION_SERVICE);
 
-        final TextView red_count = view.findViewById(R.id.red_count);
-        final TextView blue_count = view.findViewById(R.id.blue_count);
-        final TextView black_count = view.findViewById(R.id.black_count);
-
         red_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendPression(view, "RED");
-                red_count.setText("" + (Integer.parseInt(red_count.getText().toString()) + 1));
-                buttonDelay();
             }
         });
 
@@ -98,8 +92,6 @@ public class ButtonFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendPression(view, "BLUE");
-                blue_count.setText("" + (Integer.parseInt(blue_count.getText().toString()) + 1));
-                buttonDelay();
             }
         });
 
@@ -107,8 +99,6 @@ public class ButtonFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendPression(view, "BLACK");
-                black_count.setText("" + (Integer.parseInt(black_count.getText().toString()) + 1));
-                buttonDelay();
             }
         });
     }
@@ -136,11 +126,12 @@ public class ButtonFragment extends Fragment {
         }, 3000);
     }
 
-    private void sendPression(View view, String color){
+    private void sendPression(final View view, final String color){
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
         } else {
+            buttonDelay();
             Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
             final RequestQueue queue = Volley.newRequestQueue(this.getActivity());
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url
@@ -160,6 +151,7 @@ public class ButtonFragment extends Fragment {
                             JSONObject jsonResponse = null;
                             try {
                                 jsonResponse = new JSONObject(response);
+                                addToCount(view, color);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -181,6 +173,19 @@ public class ButtonFragment extends Fragment {
             queue.start();
         }
         //getCount(view);
+    }
+
+    private void addToCount(View view, String button) {
+        final TextView red_count = view.findViewById(R.id.red_count);
+        final TextView blue_count = view.findViewById(R.id.blue_count);
+        final TextView black_count = view.findViewById(R.id.black_count);
+
+        if (button.equals("RED"))
+            red_count.setText("" + (Integer.parseInt(red_count.getText().toString()) + 1));
+        else if (button.equals("BLUE"))
+            blue_count.setText("" + (Integer.parseInt(blue_count.getText().toString()) + 1));
+        else if (button.equals("BLACK"))
+            black_count.setText("" + (Integer.parseInt(black_count.getText().toString()) + 1));
     }
 
     private void getCount(final View view) {

@@ -145,7 +145,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         return true;
     }
 
-    public void sendObjectPression(String color) {
+    public void sendObjectPression(final String color) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
@@ -169,6 +169,9 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
                             JSONObject jsonResponse = null;
                             try {
                                 jsonResponse = new JSONObject(response);
+                                if (onButtonFragment == true) {
+                                    getPressionCount(color);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -196,11 +199,11 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         TextView blue_count = findViewById(R.id.blue_count);
         TextView black_count = findViewById(R.id.black_count);
 
-        if (button.equals("red"))
+        if (button.equals("RED"))
             red_count.setText("" + (Integer.valueOf(red_count.getText().toString()) + 1));
-        else if (button.equals("blue"))
+        else if (button.equals("BLUE"))
             blue_count.setText("" + (Integer.valueOf(blue_count.getText().toString()) + 1));
-        else if (button.equals("black"))
+        else if (button.equals("BLACK"))
             black_count.setText("" + (Integer.valueOf(black_count.getText().toString()) + 1));
     }
 
@@ -329,10 +332,6 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             sendObjectPression("BLUE");
         else if (theString.equals("black"))
             sendObjectPression("BLACK");
-
-        if (onButtonFragment == true) {
-            getPressionCount(theString);
-        }
     }
 }
 
