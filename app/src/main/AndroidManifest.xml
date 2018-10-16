@@ -26,6 +26,7 @@
 
     <application
         android:allowBackup="true"
+        android:persistent="true"
         android:icon="@drawable/stopclop_icon"
         android:label="StopClop\&apos;"
         android:roundIcon="@drawable/stopclop_icon"

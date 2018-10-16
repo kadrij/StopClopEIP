@@ -1,6 +1,8 @@
 package com.eip.stopclopeip;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.app.NotificationManager;
@@ -8,9 +10,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.design.widget.NavigationView;
@@ -18,9 +20,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -33,20 +33,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends BlunoLibrary implements NavigationView.OnNavigationItemSelectedListener {
-    String url = "http://romain-caldas.fr/api/rest.php?dev=69";
-    boolean onButtonFragment = false;
+    private String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    private boolean onButtonFragment = false;
+    private LocationManager locationManager;
 
     @SuppressLint("NewApi")
     @Override
@@ -75,6 +71,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         Bundle bundle = new Bundle();
         bundle.putString("token", getIntent().getStringExtra("token"));
         bundle.putString("email", getIntent().getStringExtra("email"));
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         HomeFragment mFragment = new HomeFragment();
         mFragment.setArguments(bundle);
         fragmentManager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
@@ -149,40 +146,49 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
     }
 
     public void sendObjectPression(String color) {
-        final RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                + "&function=coordonnee.add&email="
-                + getIntent().getStringExtra("email")
-                + "&token="
-                + getIntent().getStringExtra("token")
-                + "&x=2&y=2&button="
-                + color,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSONObject jsonResponse = null;
-                        try {
-                            jsonResponse = new JSONObject(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
+        } else {
+            Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+            final RequestQueue queue = Volley.newRequestQueue(this);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url
+                    + "&function=coordonnee.add&email="
+                    + getIntent().getStringExtra("email")
+                    + "&token="
+                    + getIntent().getStringExtra("token")
+                    + "&x="
+                    + location.getLongitude()
+                    + "&y="
+                    + location.getLatitude()
+                    +"&button="
+                    + color,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            JSONObject jsonResponse = null;
+                            try {
+                                jsonResponse = new JSONObject(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Alert("Impossible de se connecter au serveur");
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap();
-                params.put("myData", "{}");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-        queue.start();
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Alert("Impossible de se connecter au serveur");
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap();
+                    params.put("myData", "{}");
+                    return params;
+                }
+            };
+            queue.add(stringRequest);
+            queue.start();
+        }
     }
 
     private void getPressionCount(String button) {
@@ -196,77 +202,6 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             blue_count.setText("" + (Integer.valueOf(blue_count.getText().toString()) + 1));
         else if (button.equals("black"))
             black_count.setText("" + (Integer.valueOf(black_count.getText().toString()) + 1));
-        /*final RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                + "&function=coordonnee.get&email="
-                + getIntent().getStringExtra("email")
-                + "&token="
-                + getIntent().getStringExtra("token")
-                + "&time=1j",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSONObject jsonResponse = null;
-                        try {
-                            jsonResponse = new JSONObject(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            TextView red_count = findViewById(R.id.red_count);
-                            TextView blue_count = findViewById(R.id.blue_count);
-                            TextView black_count = findViewById(R.id.black_count);
-                            Date currentDate = new Date();
-                            Date date;
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-                            String data = jsonResponse.getString("data");
-                            JSONArray userArray = new JSONArray(data);
-
-                            int red = 0;
-                            int blue = 0;
-                            int black = 0;
-
-                            for (int i = 0; i < userArray.length(); i++) {
-                                JSONObject userData = userArray.getJSONObject(i);
-                                date = format.parse(userData.getString("date"));
-                                long diff = Math.abs(currentDate.getTime() - date.getTime());
-                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
-                                if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
-                                    if (userData.getString("button").equals("BLUE"))
-                                        blue++;
-                                    else if (userData.getString("button").equals("RED"))
-                                        red++;
-                                    else
-                                        black++;
-                                }
-                            }
-
-                            red_count.setText("" + red);
-                            blue_count.setText("" + blue);
-                            black_count.setText("" + black);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Alert("Impossible de se connecter au serveur");
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap();
-                params.put("myData", "{}");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-        queue.start();*/
     }
 
     public void showNotification(String Msg) {
@@ -388,7 +323,6 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
     @Override
     public void onSerialReceived(String theString) {
-        Log.e("Serial", theString);
         if (theString.equals("red"))
             sendObjectPression("RED");
         else if (theString.equals("blue"))
@@ -397,8 +331,80 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             sendObjectPression("BLACK");
 
         if (onButtonFragment == true) {
-            //SystemClock.sleep(75);
             getPressionCount(theString);
         }
     }
 }
+
+
+        /*final RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url
+                + "&function=coordonnee.get&email="
+                + getIntent().getStringExtra("email")
+                + "&token="
+                + getIntent().getStringExtra("token")
+                + "&time=1j",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject jsonResponse = null;
+                        try {
+                            jsonResponse = new JSONObject(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            TextView red_count = findViewById(R.id.red_count);
+                            TextView blue_count = findViewById(R.id.blue_count);
+                            TextView black_count = findViewById(R.id.black_count);
+                            Date currentDate = new Date();
+                            Date date;
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                            String data = jsonResponse.getString("data");
+                            JSONArray userArray = new JSONArray(data);
+
+                            int red = 0;
+                            int blue = 0;
+                            int black = 0;
+
+                            for (int i = 0; i < userArray.length(); i++) {
+                                JSONObject userData = userArray.getJSONObject(i);
+                                date = format.parse(userData.getString("date"));
+                                long diff = Math.abs(currentDate.getTime() - date.getTime());
+                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
+                                if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
+                                    if (userData.getString("button").equals("BLUE"))
+                                        blue++;
+                                    else if (userData.getString("button").equals("RED"))
+                                        red++;
+                                    else
+                                        black++;
+                                }
+                            }
+
+                            red_count.setText("" + red);
+                            blue_count.setText("" + blue);
+                            black_count.setText("" + black);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Alert("Impossible de se connecter au serveur");
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap();
+                params.put("myData", "{}");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+        queue.start();*/

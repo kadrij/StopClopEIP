@@ -206,7 +206,7 @@ public abstract  class BlunoLibrary extends AppCompatActivity{
 
     public void onPauseProcess() {
     	System.out.println("BLUNOActivity onPause");
-		scanLeDevice(false);
+		/*scanLeDevice(false);
 		mainContext.unregisterReceiver(mGattUpdateReceiver);
 		mLeDeviceListAdapter.clear();
     	mConnectionState=connectionStateEnum.isToScan;
@@ -219,21 +219,21 @@ public abstract  class BlunoLibrary extends AppCompatActivity{
 
 //			mBluetoothLeService.close();
 		}
-		mSCharacteristic=null;
+		mSCharacteristic=null;*/
 
 	}
 
 
 	public void onStopProcess() {
 		System.out.println("MiUnoActivity onStop");
-		if(mBluetoothLeService!=null)
+		/*if(mBluetoothLeService!=null)
 		{
 //			mBluetoothLeService.disconnect();
 //            mHandler.postDelayed(mDisonnectingOverTimeRunnable, 10000);
         	mHandler.removeCallbacks(mDisonnectingOverTimeRunnable);
 			mBluetoothLeService.close();
-		}
-		mSCharacteristic=null;
+		}*/
+		//mSCharacteristic=null;
 	}
 
 	public void onDestroyProcess() {
@@ -517,7 +517,7 @@ public abstract  class BlunoLibrary extends AppCompatActivity{
 		}
 
 		public void addDevice(BluetoothDevice device) {
-			if (!mLeDevices.contains(device)) {
+			if (!mLeDevices.contains(device) && device.getName() != null) {
 				mLeDevices.add(device);
 			}
 		}
@@ -552,8 +552,8 @@ public abstract  class BlunoLibrary extends AppCompatActivity{
 			if (view == null) {
 				view = mInflator.inflate(R.layout.listitem_device, null);
 				viewHolder = new ViewHolder();
-				viewHolder.deviceAddress = (TextView) view
-						.findViewById(R.id.device_address);
+				//viewHolder.deviceAddress = (TextView) view
+						//.findViewById(R.id.device_address);
 				viewHolder.deviceName = (TextView) view
 						.findViewById(R.id.device_name);
 				System.out.println("mInflator.inflate  getView");
@@ -566,9 +566,9 @@ public abstract  class BlunoLibrary extends AppCompatActivity{
 			final String deviceName = device.getName();
 			if (deviceName != null && deviceName.length() > 0)
 				viewHolder.deviceName.setText(deviceName);
-			else
-				viewHolder.deviceName.setText("Appareil Inconnu");
-			viewHolder.deviceAddress.setText(device.getAddress());
+			//else
+				//viewHolder.deviceName.setText("Appareil Inconnu");
+			//viewHolder.deviceAddress.setText(device.getAddress());
 
 			return view;
 		}
