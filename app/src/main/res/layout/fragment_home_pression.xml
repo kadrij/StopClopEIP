@@ -67,7 +67,7 @@
                     app:layout_constraintHorizontal_bias="0.74"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.35" />
+                    app:layout_constraintVertical_bias="0.40" />
 
                 <TextView
                     android:id="@+id/red_count"
@@ -87,7 +87,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/red_dot"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.35" />
+                    app:layout_constraintVertical_bias="0.40" />
 
                 <ImageView
                     android:id="@+id/blue_dot"
@@ -105,7 +105,7 @@
                     app:layout_constraintHorizontal_bias="0.74"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.55" />
+                    app:layout_constraintVertical_bias="0.60" />
 
                 <TextView
                     android:id="@+id/blue_count"
@@ -125,7 +125,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/blue_dot"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.55" />
+                    app:layout_constraintVertical_bias="0.60" />
 
                 <ImageView
                     android:id="@+id/black_dot"
@@ -143,7 +143,7 @@
                     app:layout_constraintHorizontal_bias="0.74"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.75" />
+                    app:layout_constraintVertical_bias="0.80" />
 
                 <TextView
                     android:id="@+id/black_count"
@@ -163,7 +163,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/black_dot"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.75" />
+                    app:layout_constraintVertical_bias="0.80" />
 
             </android.support.constraint.ConstraintLayout>
 
