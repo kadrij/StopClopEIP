@@ -79,14 +79,17 @@
             android:id="@+id/stat_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabTextColor="@color/cardview_light_background">
+            app:tabIndicatorColor="@color/cardview_dark_background"
+            app:tabIndicatorHeight="3dp"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:tabTextColor="@color/cardview_dark_background">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/pression_tab"

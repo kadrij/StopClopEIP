@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <ScrollView
         android:id="@+id/register_form"
@@ -12,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/cardview_light_background">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/register_input_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,31 +25,42 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_width="match_parent"
-                android:layout_height="156dp"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="48dp"
                 android:adjustViewBounds="false"
                 android:background="@color/cardview_light_background"
                 android:contentDescription=""
                 android:cropToPadding="false"
                 android:src="@drawable/stopclop_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
                 android:paddingTop="10dp"
-                android:textColorHint="@color/BlackButton">
+                android:textColorHint="@color/BlackButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logo">
 
                 <AutoCompleteTextView
                     android:id="@+id/email_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
                     android:drawableTint="@color/colorPrimary"
                     android:fontFamily="sans-serif"
                     android:hint="Adresse mail"
@@ -58,19 +72,23 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginStart="24dp"
                 android:paddingTop="10dp"
-                android:textColorHint="@android:color/background_dark">
+                android:textColorHint="@android:color/background_dark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email">
 
 
                 <EditText
                     android:id="@+id/password_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
                     android:drawableTint="@color/colorPrimary"
                     android:hint="Mot de passe"
                     android:imeActionLabel="@string/action_sign_in"
@@ -81,34 +99,73 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/password_conf"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginStart="24dp"
+                android:paddingTop="10dp"
+                android:textColorHint="@android:color/background_dark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password">
+
+
+                <EditText
+                    android:id="@+id/password_conf_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/colorPrimary"
+                    android:hint="Confirmation du mot de passe"
+                    android:imeActionLabel="@string/action_sign_in"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColor="@color/BlackButton" />
+
+            </android.support.design.widget.TextInputLayout>
+
             <TextView
                 android:id="@+id/birth_label"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="23dp"
-                android:layout_marginRight="23dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="24dp"
                 android:paddingTop="20dp"
                 android:text="Date de naissance"
                 android:textColor="@color/BlackButton"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.02"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password_conf" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/birth"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="24dp"
                 android:paddingTop="10dp"
-                android:textColorHint="@android:color/background_light">
+                android:textColorHint="@android:color/background_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.02"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/birth_label">
 
 
                 <TextView
                     android:id="@+id/birth_date_picker"
 
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="23dp"
-                    android:layout_marginRight="23dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="0.06"
                     android:onClick="datePicker"
                     android:text="00-00-0000"
                     android:textColor="@color/BlackButton"
@@ -118,20 +175,28 @@
 
             <Button
                 android:id="@+id/register_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="40dp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="64dp"
+                android:layout_marginLeft="64dp"
+                android:layout_marginRight="64dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/login_button"
+                android:backgroundTint="@color/colorAccent"
                 android:onClick="registerAccount"
                 android:text="S'inscrire"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textColor="@android:color/background_light"
-                android:backgroundTint="@color/colorAccent"
                 android:textSize="18sp"
-                android:textStyle="normal|bold" />
+                android:textStyle="normal|bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/birth" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </RelativeLayout>

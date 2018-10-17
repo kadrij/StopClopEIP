@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#2e7d32</color>
-    <color name="colorPrimaryDark">#1b5e20</color>
-    <color name="colorAccent">#4db6ac</color>
+<resources>ad783e
+    <!--color name="colorPrimary">#2e7d32</color-->
+    <color name="colorPrimary">#ad783e</color>
+    <!--color name="colorPrimaryDark">#1b5e20</color-->
+    <color name="colorPrimaryDark">#ad783e</color>
+    <color name="colorAccent">#40b59b</color>
     <color name="BlueButton">#42A5F5</color>
     <color name="RedButton">#F44336</color>
     <color name="DollarGreen">#85bb65</color>
@@ -10,7 +12,4 @@
     <color name="BlackButton">#000000</color>
     <color name="black_overlay">#66000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="bronze">#cd7f32</color>
-    <color name="silver">#bcc6cc</color>
-    <color name="gold">#ffd700</color>
 </resources>

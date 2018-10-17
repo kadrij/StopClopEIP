@@ -3,8 +3,12 @@ package com.eip.stopclopeip;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,10 +31,13 @@ import java.util.Map;
 public class RegisterActivity extends Activity {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.BlackButton));
     }
 
     public void datePicker(View view) {
@@ -55,25 +62,23 @@ public class RegisterActivity extends Activity {
     public void registerAccount(View view) {
         final AutoCompleteTextView mEmail = findViewById(R.id.email_input);
         final EditText mPassword = findViewById(R.id.password_input);
+        final EditText mPasswordConf = findViewById(R.id.password_conf_input);
         final TextView mDateOfBirth = findViewById(R.id.birth_date_picker);
         final RequestQueue queue = Volley.newRequestQueue(this);
 
-        if (mEmail.getText().toString().isEmpty()) {
+        Log.d("Pass",mPassword.getText().toString());
+        Log.d("Pass Conf",mPasswordConf.getText().toString());
+
+        if (mEmail.getText().toString().isEmpty())
             mEmail.setError("Une adresse e-mail est requis");
-            Alert("Une adresse e-mail est requis");
-        }
-        else if (mPassword.getText().toString().isEmpty()) {
+        else if (mPassword.getText().toString().isEmpty())
             mPassword.setError("Un mot de passe est requis");
-            Alert("Un mot de passe est requis");
-        }
-        else if (mPassword.getText().length() < 6) {
+        else if (mPassword.getText().length() < 6)
             mPassword.setError("Le mot de passe doit avoir un minimum de 6 caracteres");
-            Alert("Le mot de passe doit avoir un minimum de 6 caracteres");
-        }
-        else if (mDateOfBirth.getText().toString().equals("00-00-0000")) {
+        else if (mDateOfBirth.getText().toString().equals("00-00-0000"))
             mDateOfBirth.setError("Une date de naissance correcte est requis");
-            Alert("Une date de naissance correcte est requis");
-        }
+        else if (!mPassword.getText().toString().equals(mPasswordConf.getText().toString()))
+            mPassword.setError("Vous devez confirmer votre mot de passe");
         else {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                     + "&function=user.create&email="
@@ -98,7 +103,7 @@ public class RegisterActivity extends Activity {
                             Alert("Compte créé");
                             finish();
                         } else {
-                            Alert("Une erreur est survenue");
+                            Alert(jsonResponse.getString("reponse"));
                         }
                     } catch (JSONException e) {
                         Alert("Impossible de se connecter au serveur");

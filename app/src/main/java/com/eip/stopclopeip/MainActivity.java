@@ -21,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -43,15 +44,21 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
     private String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     private boolean onButtonFragment = false;
     private LocationManager locationManager;
+    private Toolbar toolbar;
+    private TextView toolbarTitle;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
+        toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbar.setElevation(0);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorAccent));
 
         onCreateProcess();
         serialBegin(115200);
@@ -66,7 +73,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        toolbar.setTitle("Accueil");
+        toolbarTitle.setText("Accueil");
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("token", getIntent().getStringExtra("token"));
@@ -109,7 +116,6 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         onButtonFragment = false;
-        Toolbar toolbar = findViewById(R.id.toolbar);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("token", getIntent().getStringExtra("token"));
@@ -117,20 +123,20 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
 
         Fragment mFragment = null;
         if (id == R.id.nav_home) {
-            toolbar.setTitle("Accueil");
+            toolbarTitle.setText("Accueil");
             mFragment = new HomeFragment();
         } else if (id == R.id.nav_button) {
-            toolbar.setTitle("Boutons");
+            toolbarTitle.setText("Boutons");
             onButtonFragment = true;
             mFragment = new ButtonFragment();
         } else if (id == R.id.nav_graph) {
-            toolbar.setTitle("Statistiques");
+            toolbarTitle.setText("Statistiques");
             mFragment = new StatFragment();
         } else if (id == R.id.nav_advice) {
-            toolbar.setTitle("Conseils");
+            toolbarTitle.setText("Conseils");
             mFragment = new AdviceFragment();
         } else if (id == R.id.nav_contacts) {
-            toolbar.setTitle("Contacts");
+            toolbarTitle.setText("Contacts");
             mFragment = new ContactFragment();
         } else if (id == R.id.nav_disconnect) {
             disconnect();
@@ -150,6 +156,8 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
         } else {
+            if (onButtonFragment == true)
+                addToCount(color);
             Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
             final RequestQueue queue = Volley.newRequestQueue(this);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url
@@ -169,9 +177,6 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
                             JSONObject jsonResponse = null;
                             try {
                                 jsonResponse = new JSONObject(response);
-                                if (onButtonFragment == true) {
-                                    getPressionCount(color);
-                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -180,6 +185,8 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Alert("Impossible de se connecter au serveur");
+                    if (onButtonFragment == true)
+                        reduceToCount(color);
                 }
             }) {
                 @Override
@@ -194,7 +201,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
         }
     }
 
-    private void getPressionCount(String button) {
+    private void addToCount(String button) {
         TextView red_count = findViewById(R.id.red_count);
         TextView blue_count = findViewById(R.id.blue_count);
         TextView black_count = findViewById(R.id.black_count);
@@ -205,6 +212,19 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
             blue_count.setText("" + (Integer.valueOf(blue_count.getText().toString()) + 1));
         else if (button.equals("BLACK"))
             black_count.setText("" + (Integer.valueOf(black_count.getText().toString()) + 1));
+    }
+
+    private void reduceToCount(String button) {
+        TextView red_count = findViewById(R.id.red_count);
+        TextView blue_count = findViewById(R.id.blue_count);
+        TextView black_count = findViewById(R.id.black_count);
+
+        if (button.equals("RED"))
+            red_count.setText("" + (Integer.valueOf(red_count.getText().toString()) - 1));
+        else if (button.equals("BLUE"))
+            blue_count.setText("" + (Integer.valueOf(blue_count.getText().toString()) - 1));
+        else if (button.equals("BLACK"))
+            black_count.setText("" + (Integer.valueOf(black_count.getText().toString()) - 1));
     }
 
     public void showNotification(String Msg) {
@@ -310,6 +330,7 @@ public class MainActivity extends BlunoLibrary implements NavigationView.OnNavig
     public void onConectionStateChange(BlunoLibrary.connectionStateEnum theConnectionState) {
         switch (theConnectionState) {
             case isConnected:
+
                 break;
             case isConnecting:
                 break;

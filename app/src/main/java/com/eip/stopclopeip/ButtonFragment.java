@@ -123,7 +123,7 @@ public class ButtonFragment extends Fragment {
                     }
                 });
             }
-        }, 3000);
+        }, 750);
     }
 
     private void sendPression(final View view, final String color){
@@ -131,6 +131,7 @@ public class ButtonFragment extends Fragment {
                 && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
         } else {
+            addToCount(view, color);
             buttonDelay();
             Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
             final RequestQueue queue = Volley.newRequestQueue(this.getActivity());
@@ -151,7 +152,6 @@ public class ButtonFragment extends Fragment {
                             JSONObject jsonResponse = null;
                             try {
                                 jsonResponse = new JSONObject(response);
-                                addToCount(view, color);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -160,6 +160,7 @@ public class ButtonFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Alert("Impossible de se connecter au serveur");
+                    reduceToCount(view, color);
                 }
             }) {
                 @Override
@@ -186,6 +187,19 @@ public class ButtonFragment extends Fragment {
             blue_count.setText("" + (Integer.parseInt(blue_count.getText().toString()) + 1));
         else if (button.equals("BLACK"))
             black_count.setText("" + (Integer.parseInt(black_count.getText().toString()) + 1));
+    }
+
+    private void reduceToCount(View view, String button) {
+        final TextView red_count = view.findViewById(R.id.red_count);
+        final TextView blue_count = view.findViewById(R.id.blue_count);
+        final TextView black_count = view.findViewById(R.id.black_count);
+
+        if (button.equals("RED"))
+            red_count.setText("" + (Integer.parseInt(red_count.getText().toString()) - 1));
+        else if (button.equals("BLUE"))
+            blue_count.setText("" + (Integer.parseInt(blue_count.getText().toString()) - 1));
+        else if (button.equals("BLACK"))
+            black_count.setText("" + (Integer.parseInt(black_count.getText().toString()) - 1));
     }
 
     private void getCount(final View view) {

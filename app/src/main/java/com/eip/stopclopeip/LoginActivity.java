@@ -6,10 +6,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +41,7 @@ public class LoginActivity extends Activity {
     private ScrollView mLoginForm;
     private Button mSignUp;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,8 @@ public class LoginActivity extends Activity {
         mPassword = findViewById(R.id.password_input);
         mSignUp = findViewById(R.id.register_button);
 
+        getWindow().setStatusBarColor(getResources().getColor(R.color.BlackButton));
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         final Boolean[] logError = {false};
 
@@ -57,6 +63,8 @@ public class LoginActivity extends Activity {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                mEmail.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                mPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 showProgress(true);
                 if (mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
                     mEmail.setError("Une adresse mail est requise");

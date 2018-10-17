@@ -66,7 +66,6 @@ public abstract  class BlunoLibrary extends AppCompatActivity{
 
 	static class ViewHolder {
 		TextView deviceName;
-		TextView deviceAddress;
 	}
     private static BluetoothGattCharacteristic mSCharacteristic, mModelNumberCharacteristic, mSerialPortCharacteristic, mCommandCharacteristic;
     BluetoothLeService mBluetoothLeService;

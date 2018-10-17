@@ -44,7 +44,9 @@ public class HomeFragment extends Fragment {
     private ConstraintLayout mErrorForm;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
+    private HomeAdviceFragment homeAdviceFragment;
+    private HomePressionFragment homePressionFragment;
+    private HomeAchievmentFragment homeAchievmentFragment;
     public HomeFragment() {
     }
 
@@ -56,6 +58,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        homeAdviceFragment = new HomeAdviceFragment();
+        homePressionFragment = new HomePressionFragment();
+        homeAchievmentFragment = new HomeAchievmentFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("token", getArguments().getString("token"));
+        bundle.putString("email", getArguments().getString("email"));
+
+        homeAdviceFragment.setArguments(bundle);
+        homePressionFragment.setArguments(bundle);
+        homeAchievmentFragment.setArguments(bundle);
     }
 
     @Override
@@ -114,9 +127,9 @@ public class HomeFragment extends Fragment {
         tabLayout = view.findViewById(R.id.collection_tab);
         viewPager = view.findViewById(R.id.collection_view);
         ViewCollectionAdapter adapter = new ViewCollectionAdapter(getChildFragmentManager());
-        adapter.AddFragment(new HomeAdviceFragment());
-        adapter.AddFragment(new HomePressionFragment());
-        adapter.AddFragment(new HomeAchievmentFragment());
+        adapter.AddFragment(homeAdviceFragment);
+        adapter.AddFragment(homePressionFragment);
+        adapter.AddFragment(homeAchievmentFragment);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }

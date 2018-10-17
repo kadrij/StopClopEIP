@@ -3,6 +3,9 @@ package com.eip.stopclopeip;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.app.ActionBar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,7 +44,6 @@ public class AdviceListFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         adviceList = new ArrayList<>();
-
         recyclerView = view.findViewById(R.id.advice_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -68,12 +70,14 @@ public class AdviceListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        /*switch (item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
-
-                getActivity().getSupportFragmentManager().popBackStack();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_in_right);
+                fragmentTransaction.replace(R.id.content_frame, new AdviceFragment()).addToBackStack(null).commit();
                 return true;
-        }*/
+        }
 
         return false;
     }
