@@ -41,8 +41,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.android.gms.internal.zzahf.runOnUiThread;
-
 public class ButtonFragment extends Fragment {
     private String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     private ProgressBar mProgress;
@@ -118,7 +116,7 @@ public class ButtonFragment extends Fragment {
 
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {

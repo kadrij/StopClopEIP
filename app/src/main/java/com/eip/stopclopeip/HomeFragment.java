@@ -86,8 +86,6 @@ public class HomeFragment extends Fragment {
         mErrorForm = view.findViewById(R.id.error_form);
         final Date[] mDateClop = {new Date()};
 
-        showProgress(true);
-
         getDateClop(new CallBack() {
             @Override
             public void onSuccess(Date dateClop) {
@@ -132,6 +130,8 @@ public class HomeFragment extends Fragment {
         adapter.AddFragment(homeAchievmentFragment);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        showProgress(true);
     }
 
     public void getRecord() {

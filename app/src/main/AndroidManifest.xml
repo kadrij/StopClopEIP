@@ -31,7 +31,8 @@
         android:label="StopClop\&apos;"
         android:roundIcon="@drawable/stopclop_icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">
@@ -58,7 +59,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVcQXo7tajyl-oCuT84Osb2aG7gzWfnaU" />
 
-        <activity android:name=".CategoryActivity"></activity>
     </application>
 
 </manifest>

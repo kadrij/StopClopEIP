@@ -51,14 +51,6 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
                 }
             }
         });
-        /*holder.mCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, CategoryActivity.class);
-                intent.putExtra("category", advice.getTag());
-                mContext.startActivity(intent);
-            }
-        });*/
         if (advice.isLiked())
             holder.mLike.setImageResource(R.drawable.ic_thumb_up_liked_24dp);
     }
