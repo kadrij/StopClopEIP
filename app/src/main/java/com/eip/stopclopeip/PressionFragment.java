@@ -49,6 +49,9 @@ public class PressionFragment extends Fragment {
     private ProgressBar mProgress;
     private ConstraintLayout mErrorForm;
     private ConstraintLayout mStatForm;
+    private int red[] = new int[7];;
+    private int blue[] = new int[7];;
+    private int black[] = new int[7];;
 
     public static PressionFragment newInstance() {
         PressionFragment fragment = new PressionFragment();
@@ -61,8 +64,7 @@ public class PressionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_pression, container, false);
     }
 
@@ -94,44 +96,13 @@ public class PressionFragment extends Fragment {
                             e.printStackTrace();
                         }
                         try {
-                            JSONObject userData;
-                            final String labels[] = new String[7];
-                            int red[] = new int[7];
-                            int blue[] = new int[7];
-                            int black[] = new int[7];
-                            Date currentDate = new Date();
-                            Date date;
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
+                            final String labels[] = getLabels();;
                             String data = jsonResponse.getString("data");
                             JSONArray userArray = new JSONArray(data);
-
-                            for (int i = 0; i < 7; i++) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.add(Calendar.DATE, i * -1);
-                                date = cal.getTime();
-                                labels[i] = (DateFormat.format("dd/MM", Math.abs(date.getTime()))).toString();
-                            }
-                            for (int i = 0; i < userArray.length(); i++) {
-                                userData = userArray.getJSONObject(i);
-                                date = format.parse(userData.getString("date"));
-                                long diff = Math.abs(currentDate.getTime() - date.getTime());
-                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
-                                if (TimeUnit.MILLISECONDS.toDays(diff) < 7) {
-                                    if (userData.getString("button").equals("BLUE"))
-                                        blue[day]++;
-                                    else if (userData.getString("button").equals("RED"))
-                                        red[day]++;
-                                    else
-                                        black[day]++;
-                                }
-                            }
-
+                            getPressions(userArray);
                             setPressionChart(view, red, blue, black, labels);
                             showProgress(false);
                         } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
@@ -252,6 +223,78 @@ public class PressionFragment extends Fragment {
         return set;
     }
 
+    private String[] getLabels() {
+        String[] labels = new String[7];
+        Date date;
+
+        for (int i = 0; i < 7; i++) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, i * -1);
+            date = cal.getTime();
+            labels[i] = (DateFormat.format("dd/MM", Math.abs(date.getTime()))).toString();
+        }
+        return labels;
+    }
+
+    private void getPressions(JSONArray userArray) {
+        JSONObject userData;
+        Date currentDate = new Date();
+        Date date;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (int i = 0; i < userArray.length(); i++) {
+            try {
+                userData = userArray.getJSONObject(i);
+                date = format.parse(userData.getString("date"));
+                long diff = Math.abs(currentDate.getTime() - date.getTime());
+                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
+                if (TimeUnit.MILLISECONDS.toDays(diff) < 7) {
+                    if (userData.getString("button").equals("BLUE"))
+                        blue[day]++;
+                    else if (userData.getString("button").equals("RED"))
+                        red[day]++;
+                    else
+                        black[day]++;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void showError(final boolean show) {
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mStatForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+            mErrorForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
+    }
+
+    private void Alert(String Msg) {
+        Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();
+    }
+}
+
     /*private void setMoneyChart(View view, int red[], int blue[], int redTotalWeek, int redTotalInstallation,
                        int blueTotalWeek, int blueTotalInstallation, final String labels[]) {
         LineChart lineChart = view.findViewById(R.id.money_chart);
@@ -287,34 +330,3 @@ public class PressionFragment extends Fragment {
         lineChart.setData(lineData);
         lineChart.invalidate();
     }*/
-
-    private void showError(final boolean show) {
-        try {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            mStatForm.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
-            mErrorForm.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } catch (IllegalStateException e) {
-            System.out.println(e);
-        }
-    }
-
-    private void Alert(String Msg) {
-        Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();
-    }
-}
