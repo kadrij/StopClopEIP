@@ -10,7 +10,7 @@ public class HomeAchievmentFragment extends Fragment {
     public HomeAchievmentFragment() {
     }
 
-    public static HomeAchievmentFragment newInstance(String param1, String param2) {
+    public static HomeAchievmentFragment newInstance() {
         HomeAchievmentFragment fragment = new HomeAchievmentFragment();
         return fragment;
     }

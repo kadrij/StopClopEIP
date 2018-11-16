@@ -56,7 +56,7 @@ public class HomePressionFragment extends Fragment {
     public HomePressionFragment() {
     }
 
-    public static HomePressionFragment newInstance(String param1, String param2) {
+    public static HomePressionFragment newInstance() {
         HomePressionFragment fragment = new HomePressionFragment();
         return fragment;
     }
@@ -100,8 +100,6 @@ public class HomePressionFragment extends Fragment {
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         l.setXEntrySpace(7);
         l.setYEntrySpace(5);
-
-        showProgress(false);
     }
 
     private void addData(int red, int blue, int black) {
@@ -202,10 +200,13 @@ public class HomePressionFragment extends Fragment {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+
+                        showProgress(false);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                showProgress(false);
             }
         }) {
             @Override

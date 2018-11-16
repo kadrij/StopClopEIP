@@ -10,7 +10,7 @@ public class HomeAdviceFragment extends Fragment {
     public HomeAdviceFragment() {
     }
 
-    public static HomeAdviceFragment newInstance(String param1, String param2) {
+    public static HomeAdviceFragment newInstance() {
         HomeAdviceFragment fragment = new HomeAdviceFragment();
         return fragment;
     }

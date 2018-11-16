@@ -37,8 +37,18 @@ public class StatFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewpager_id);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        adapter.AddFragment(new PressionFragment(), "Pressions");
-        adapter.AddFragment(new MoneyFragment(), "Economies");
+        Bundle bundle = new Bundle();
+        bundle.putString("token", getArguments().getString("token"));
+        bundle.putString("email", getArguments().getString("email"));
+
+        PressionFragment pressionFragment = new PressionFragment();
+        MoneyFragment moneyFragment = new MoneyFragment();
+
+        pressionFragment.setArguments(bundle);
+        moneyFragment.setArguments(bundle);
+
+        adapter.AddFragment(pressionFragment, "Pressions");
+        adapter.AddFragment(moneyFragment, "Economies");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
