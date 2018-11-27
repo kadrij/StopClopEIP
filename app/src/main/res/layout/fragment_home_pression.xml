@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomePressionFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context="com.eip.stopclopeip.Home.HomePressionFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/daily_stat_form"
@@ -20,7 +18,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/cardview_light_background"
+            app:cardBackgroundColor="#1DD1A1"
             app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +41,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="Stats de la journée"
-                    android:textColor="@color/common_google_signin_btn_text_light_focused"
+                    android:textColor="@color/cast_expanded_controller_text_color"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -82,6 +80,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="0"
+                    android:textColor="@color/cast_expanded_controller_text_color"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -120,6 +119,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="0"
+                    android:textColor="@color/cast_expanded_controller_text_color"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -158,6 +158,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="0"
+                    android:textColor="@color/cast_expanded_controller_text_color"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"

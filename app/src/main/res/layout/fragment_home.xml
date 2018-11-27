@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    tools:context="com.eip.stopclopeip.HomeFragment">
+    tools:context="com.eip.stopclopeip.Home.HomeFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/progress_form"

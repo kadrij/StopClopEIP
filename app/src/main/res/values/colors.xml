@@ -5,6 +5,7 @@
     <!--color name="colorPrimaryDark">#1b5e20</color-->
     <color name="colorPrimaryDark">#40b59b</color>
     <color name="colorAccent">#40b59b</color>
+    <color name="pressionBackground">#1DD1A1</color>
     <color name="BlueButton">#42A5F5</color>
     <color name="RedButton">#F44336</color>
     <color name="DollarGreen">#85bb65</color>
