@@ -147,9 +147,9 @@ public class ContactFragment extends Fragment implements OnMapReadyCallback {
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity().getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity().getParent(), Manifest.permission.ACCESS_FINE_LOCATION))
-                ActivityCompat.requestPermissions(getActivity().getParent(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
+                ActivityCompat.requestPermissions(getActivity().getParent(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_CODE);
             else
-                ActivityCompat.requestPermissions(getActivity().getParent(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
+                ActivityCompat.requestPermissions(getActivity().getParent(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_CODE);
             return false;
         } else
             return true;

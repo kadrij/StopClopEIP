@@ -29,6 +29,9 @@
     <item android:title="Autre">
         <menu>
             <item
+                android:id="@+id/nav_achievment"
+                android:title="Succès" />
+            <item
                 android:id="@+id/nav_disconnect"
                 android:title="Deconnexion" />
         </menu>

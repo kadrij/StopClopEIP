@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
-    String url = "http://romain-caldas.fr/api/rest.php?dev=";
+    String url = "http://romain-caldas.fr/api/rest.php?";
     RequestQueue queue;
     private ProgressBar mProgress;
     private ScrollView mHomeForm;

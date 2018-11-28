@@ -2,6 +2,7 @@ package com.eip.stopclopeip.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.location.LocationListener;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -46,9 +48,12 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private String url = "http://romain-caldas.fr/api/rest.php?dev=69";
+    private double lat = 0, lon = 0;
     private boolean onButtonFragment = false;
     private LocationManager locationManager;
     private Toolbar toolbar;
@@ -174,55 +179,66 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
     public void sendObjectPression(final String color) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
+            statusCheck();
         } else {
-            @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
-            if (location == null) {
-                Alert("Veuillez activer votre GPS pour le bon fonctionnement de l'application.");
-                return;
-            }
-            if (onButtonFragment == true) {
-                addToCount(color);
-            }
-            final RequestQueue queue = Volley.newRequestQueue(this);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                    + "&function=coordonnee.add&email="
-                    + getIntent().getStringExtra("email")
-                    + "&token="
-                    + getIntent().getStringExtra("token")
-                    + "&x="
-                    + location.getLongitude()
-                    + "&y="
-                    + location.getLatitude()
-                    +"&button="
-                    + color,
-                    new Response.Listener<String>() {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+            Timer buttonTimer = new Timer();
+            buttonTimer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+
                         @Override
-                        public void onResponse(String response) {
-                            JSONObject jsonResponse = null;
-                            try {
-                                jsonResponse = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        public void run() {
+                            if (lon == 0 || lat == 0) {
+                                Alert("L'application n'est pas parvenu à obtenir votre position.");
+                                return;
                             }
+                            Log.v("Lon", "" + lon);
+                            addToCount(color);
+                            final RequestQueue queue = Volley.newRequestQueue(getBaseContext());
+                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url
+                                    + "&function=coordonnee.add&email="
+                                    + getIntent().getStringExtra("email")
+                                    + "&token="
+                                    + getIntent().getStringExtra("token")
+                                    + "&x="
+                                    + lon
+                                    + "&y="
+                                    + lat
+                                    +"&button="
+                                    + color,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            JSONObject jsonResponse = null;
+                                            try {
+                                                jsonResponse = new JSONObject(response);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Alert("Impossible de se connecter au serveur");
+                                    reduceToCount(color);
+                                }
+                            }) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap();
+                                    params.put("myData", "{}");
+                                    return params;
+                                }
+                            };
+                            queue.add(stringRequest);
+                            queue.start();
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Alert("Impossible de se connecter au serveur");
-                    if (onButtonFragment == true)
-                        reduceToCount(color);
+                    });
                 }
-            }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap();
-                    params.put("myData", "{}");
-                    return params;
-                }
-            };
-            queue.add(stringRequest);
-            queue.start();
+            }, 250);
         }
     }
 
@@ -280,14 +296,16 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
     }
 
     public void statusCheck() {
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        } else if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-        }
+        try {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                buildAlertMessageNoGps();
+            } else {
+                locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+            }} catch (NullPointerException e) {}
     }
 
     public void disconnect() {
@@ -323,6 +341,22 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
+    private final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {}
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+    };
 
     /*@Override
     protected void onResume() {

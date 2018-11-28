@@ -1,28 +1,45 @@
 package com.eip.stopclopeip.Advice;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.eip.stopclopeip.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdviceListFragment extends Fragment {
-    RecyclerView recyclerView;
-    AdviceAdapter adapter;
-    List<AdviceSample> adviceList;
-
-    public AdviceListFragment() {
-    }
+    private Bundle bundle;
+    private ConstraintLayout mProgress;
+    private ConstraintLayout mErrorForm;
+    private RecyclerView recyclerView;
+    private AdviceAdapter adapter;
+    private List<AdviceSample> adviceList;
 
     public static AdviceListFragment newInstance(String param1, String param2) {
         AdviceListFragment fragment = new AdviceListFragment();
@@ -43,27 +60,63 @@ public class AdviceListFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         adviceList = new ArrayList<>();
+        bundle = this.getArguments();
+        mProgress = view.findViewById(R.id.progress_form);
+        mErrorForm = view.findViewById(R.id.error_form);
         recyclerView = view.findViewById(R.id.advice_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adviceList.add(new AdviceSample(1,
-                "Fais des exercices de respiration : allongé ou assis toi, mets tes mains sur ton ventre, respires profondément et concentre toi sur le mouvement de ton ventre.",
-                103,
-                "Zen",
-                false));
-        /*adviceList.add(new Advice(2,
-                "A la place d'une cigarette habituelle, essayé de changé celle-ci en prenant un café ou un verre d'eau.",
-                35,
-                "Autres",
-                false));
-        adviceList.add(new Advice(3,
-                "Fait du sport.",
-                24,
-                "Sport",
-                false));*/
+        showProgress(true);
+        createAdviceList();
+    }
 
-        adapter = new AdviceAdapter(getActivity(), adviceList);
-        recyclerView.setAdapter(adapter);
+    public void createAdviceList() {
+        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                "https://romain-caldas.fr/api/rest.php?dev=69&function=conseil.getAll&fbclid=IwAR1cGjI0W6brskBVpiQU_QcmxQJ8fhKsInyt4fD-tBHGnrt6o_70bGTQS_M",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject jsonResponse = null;
+                        try {
+                            jsonResponse = new JSONObject(response);
+                            String data = jsonResponse.getString("data");
+                            String category = bundle.getString("category");
+                            JSONArray adviceArray = new JSONArray(data);
+                            for (int i = 0; i < adviceArray.length(); i++) {
+                                JSONObject adviceData = adviceArray.getJSONObject(i);
+                                if (category.equals(adviceData.getString("categorie"))) {
+                                    adviceList.add(new AdviceSample(adviceData.getInt("id"),
+                                            adviceData.getString("title"),
+                                            adviceData.getString("comment"),
+                                            adviceData.getString("date"),
+                                            adviceData.getString("categorie")));
+                                }
+                            }
+                            adapter = new AdviceAdapter(getActivity(), adviceList);
+                            recyclerView.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showProgress(false);
+                showError(true);
+                Alert("Impossible de se connecter au serveur");
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap();
+                params.put("myData", "{}");
+                return params;
+            }
+        };
+        showProgress(false);
+        queue.add(stringRequest);
+        queue.start();
     }
 
     @Override
@@ -79,5 +132,57 @@ public class AdviceListFragment extends Fragment {
         }
 
         return false;
+    }
+
+    void showProgress(final boolean show) {
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+            recyclerView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
+    }
+
+    void showError(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+        recyclerView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+        mErrorForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mErrorForm.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    public void Alert(String Msg) {
+        Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();
     }
 }

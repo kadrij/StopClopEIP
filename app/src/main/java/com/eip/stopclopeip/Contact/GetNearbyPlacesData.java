@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 
-import com.eip.stopclopeip.Contact.DataParser;
-import com.eip.stopclopeip.Contact.DownloadUrl;
 import com.eip.stopclopeip.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;

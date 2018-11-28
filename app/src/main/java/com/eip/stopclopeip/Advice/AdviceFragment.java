@@ -16,7 +16,7 @@ import com.eip.stopclopeip.R;
 
 public class AdviceFragment extends Fragment {
     String url = "http://romain-caldas.fr/api/rest.php?dev=69";
-    private CardView zenCard;
+    private CardView fatigueCard, insomnieCard, touxCard, addictionCard, faimCard, irritabiliteCard;
 
     public AdviceFragment() {}
 
@@ -37,39 +37,65 @@ public class AdviceFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        zenCard = view.findViewById(R.id.fatigue_card);
-        zenCard.setOnClickListener(new View.OnClickListener() {
+        fatigueCard = view.findViewById(R.id.fatigue_card);
+        insomnieCard = view.findViewById(R.id.insomnie_card);
+        touxCard = view.findViewById(R.id.toux_card);
+        addictionCard = view.findViewById(R.id.addiction_card);
+        faimCard = view.findViewById(R.id.faim_card);
+        irritabiliteCard = view.findViewById(R.id.irritabilite_card);
+
+        fatigueCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_in_left);
-                fragmentTransaction.replace(R.id.content_frame, new AdviceListFragment()).addToBackStack(null).commit();
+                goToAdviceList("fatigue");
             }
         });
-        /*adviceList = new ArrayList<>();
 
-        recyclerView = view.findViewById(R.id.advice_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adviceList.add(new Advice(1,
-                "Fais des exercices de respiration : allongé ou assis toi, mets tes mains sur ton ventre, respires profondément et concentre toi sur le mouvement de ton ventre.",
-                103,
-                "Zen",
-                false));
-        adviceList.add(new Advice(2,
-                "A la place d'une cigarette habituelle, essayé de changé celle-ci en prenant un café ou un verre d'eau.",
-                35,
-                "Autres",
-                false));
-        adviceList.add(new Advice(3,
-                "Fait du sport.",
-                24,
-                "Sport",
-                false));
+        insomnieCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAdviceList("insomnie");
+            }
+        });
 
-        adapter = new AdviceAdapter(getActivity(), adviceList);
-        recyclerView.setAdapter(adapter);*/
+        touxCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAdviceList("toux");
+            }
+        });
+
+        addictionCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAdviceList("addiction");
+            }
+        });
+
+        faimCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAdviceList("faim");
+            }
+        });
+
+        irritabiliteCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAdviceList("irritabilite");
+            }
+        });
+    }
+
+    public void goToAdviceList(String category) {
+        Fragment adviceListFragment = new AdviceListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("category", category);
+        adviceListFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_in_left);
+        fragmentTransaction.replace(R.id.content_frame, adviceListFragment).addToBackStack(null).commit();
     }
 
     public void Alert(String Msg) {

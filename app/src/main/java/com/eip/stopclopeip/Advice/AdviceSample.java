@@ -2,18 +2,19 @@ package com.eip.stopclopeip.Advice;
 
 public class AdviceSample {
     private int id;
-    private String content;
-    private int likes;
-    private String tag;
-    private boolean liked;
+    private String title;
+    private String comment;
+    private String date;
+    private String categorie;
 
-    public AdviceSample(int id, String content, int likes, String tag, boolean liked) {
+    public AdviceSample(int id, String title, String comment, String date, String categorie) {
         this.id = id;
-        this.content = content;
-        this.likes = likes;
-        this.tag = tag;
-        this.liked = liked;
+        this.title = title;
+        this.comment = comment;
+        this.date = date;
+        this.categorie = categorie;
     }
+
 
     public int getId() {
         return id;
@@ -23,36 +24,35 @@ public class AdviceSample {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getTitle() {
+        return title;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public int getLikes() {
-        return likes;
+    public String getComment() {
+        return comment;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getTag() {
-        return tag;
+    public String getDate() {
+        return date;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public boolean isLiked() {
-        return liked;
+    public String getCategorie() {
+        return categorie;
     }
 
-    public void setLiked(boolean liked) {
-        this.liked = liked;
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
     }
-
 }

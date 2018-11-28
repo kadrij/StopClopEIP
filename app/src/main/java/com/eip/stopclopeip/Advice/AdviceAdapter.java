@@ -33,26 +33,8 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
     @Override
     public void onBindViewHolder(final AdviceViewHolder holder, int position) {
         final AdviceSample adviceSample = AdviceList.get(position);
-        holder.mContent.setText(adviceSample.getContent());
-        holder.mLikeCount.setText("" + (adviceSample.getLikes()));
-        holder.mTag.setText(adviceSample.getTag());
-        holder.mLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!adviceSample.isLiked()) {
-                    holder.mLike.setImageResource(R.drawable.ic_thumb_up_liked_24dp);
-                    holder.mLikeCount.setText("" + (adviceSample.getLikes() + 1));
-                    adviceSample.setLiked(true);
-                }
-                else {
-                    holder.mLike.setImageResource(R.drawable.ic_thumb_up_not_licked_24dp);
-                    holder.mLikeCount.setText("" + (adviceSample.getLikes()));
-                    adviceSample.setLiked(false);
-                }
-            }
-        });
-        if (adviceSample.isLiked())
-            holder.mLike.setImageResource(R.drawable.ic_thumb_up_liked_24dp);
+        holder.mTitle.setText(adviceSample.getTitle());
+        holder.mComment.setText(adviceSample.getComment());
     }
 
     @Override
@@ -67,19 +49,13 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
     }
 
     class AdviceViewHolder extends RecyclerView.ViewHolder {
-        CardView mCard;
-        TextView mContent;
-        TextView mLikeCount;
-        TextView mTag;
-        ImageView mLike;
+        TextView mTitle;
+        TextView mComment;
 
         public AdviceViewHolder(View itemView) {
             super(itemView);
-            mCard = itemView.findViewById(R.id.advice_card);
-            mContent = itemView.findViewById(R.id.content);
-            mLikeCount = itemView.findViewById(R.id.like_counter);
-            mTag = itemView.findViewById(R.id.tag_content);
-            mLike = itemView.findViewById(R.id.like_button);
+            mTitle = itemView.findViewById(R.id.advice_title);
+            mComment = itemView.findViewById(R.id.advice_comment);
         }
     }
 }
