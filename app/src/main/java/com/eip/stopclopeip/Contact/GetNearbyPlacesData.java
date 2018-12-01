@@ -51,9 +51,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
         BitmapDrawable openDrawable = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_pharmacy);
-        BitmapDrawable closedDrawable = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_pharmacy_closed);
-        Bitmap openMarker = Bitmap.createScaledBitmap(openDrawable.getBitmap(), 48, 48, false);
-        Bitmap closedMarker = Bitmap.createScaledBitmap(closedDrawable.getBitmap(), 48, 48, false);
+        Bitmap openMarker = Bitmap.createScaledBitmap(openDrawable.getBitmap(), 96, 96, false);
         for (int i = 0; i < nearbyPlacesList.size(); i++) {
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlacesList.get(i);

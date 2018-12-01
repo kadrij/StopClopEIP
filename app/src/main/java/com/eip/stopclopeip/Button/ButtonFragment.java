@@ -288,7 +288,6 @@ public class ButtonFragment extends Fragment {
                                 JSONObject userData = userArray.getJSONObject(i);
                                 date = format.parse(userData.getString("date"));
                                 long diff = Math.abs(currentDate.getTime() - date.getTime());
-                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
                                 if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
                                     if (userData.getString("button").equals("BLUE") && blue <= 99999)
                                         blue++;

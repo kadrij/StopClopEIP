@@ -118,6 +118,7 @@ public class ContactFragment extends Fragment implements OnMapReadyCallback {
                     CameraPosition pos = CameraPosition.builder().target(new LatLng(arg0.getLatitude(), arg0.getLongitude())).zoom(12).bearing(0).tilt(0).build();
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                     getPharmacies(getNearbyPlacesData);
+                    getDangerousZones();
                     init[0] = true;
                 }
             }
@@ -132,6 +133,10 @@ public class ContactFragment extends Fragment implements OnMapReadyCallback {
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
         getNearbyPlacesData.execute(dataTransfer);
+    }
+
+    private void getDangerousZones() {
+        return;
     }
 
     private String getUrl(double latitude, double longitude) {

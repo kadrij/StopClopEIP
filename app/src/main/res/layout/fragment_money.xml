@@ -7,6 +7,71 @@
     tools:context="com.eip.stopclopeip.Stat.StatMoneyFragment">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/error_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/error_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_error_36dp"
+            app:layout_constraintBottom_toBottomOf="@+id/error_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.86" />
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Une erreur est survenue"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/progress_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/stat_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -14,7 +79,7 @@
             android:id="@+id/install_money"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
@@ -119,7 +184,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="12dp"
             android:visibility="visible"
             app:cardBackgroundColor="#c4a381"
@@ -129,7 +194,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/install_money"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" >
+            app:layout_constraintVertical_chainStyle="packed">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -220,7 +285,7 @@
             android:id="@+id/week_money"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="32dp"
@@ -231,7 +296,7 @@
             app:layout_constraintEnd_toStartOf="@+id/day_money"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/month_money" >
+            app:layout_constraintTop_toBottomOf="@+id/month_money">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -324,7 +389,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="32dp"
             android:visibility="visible"
             app:cardBackgroundColor="#a379c9"
@@ -334,7 +399,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/week_money"
             app:layout_constraintTop_toBottomOf="@+id/install_money"
-            app:layout_constraintVertical_bias="0.6" >
+            app:layout_constraintVertical_bias="0.6">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

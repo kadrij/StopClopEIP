@@ -130,32 +130,6 @@ public class StatPressionFragment extends Fragment {
         queue.start();
     }
 
-    void showProgress(final boolean show) {
-        try {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            mStatForm.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } catch (IllegalStateException e) {
-            System.out.println(e);
-        }
-    }
-
     private void setPressionChart(View view, int red[], int blue[], int black[], final String labels[]) {
         LineChart lineChart = view.findViewById(R.id.pression_chart);
         try {
@@ -269,6 +243,32 @@ public class StatPressionFragment extends Fragment {
         }
     }
 
+    void showProgress(final boolean show) {
+        try {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mStatForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mStatForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } catch (IllegalStateException e) {
+            System.out.println(e);
+        }
+    }
+
     private void showError(final boolean show) {
         try {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
@@ -299,39 +299,3 @@ public class StatPressionFragment extends Fragment {
         Toast.makeText(this.getActivity(), Msg, Toast.LENGTH_SHORT).show();
     }
 }
-
-    /*private void setMoneyChart(View view, int red[], int blue[], int redTotalWeek, int redTotalInstallation,
-                       int blueTotalWeek, int blueTotalInstallation, final String labels[]) {
-        LineChart lineChart = view.findViewById(R.id.money_chart);
-        TextView instMoney = view.findViewById(R.id.installation_value);
-        TextView weekMoney = view.findViewById(R.id.week_value);
-        lineChart.getDescription().setEnabled(false);
-        lineChart.getXAxis().setDrawGridLines(false);
-        List<Entry> lineEntries = new ArrayList<>();
-
-        for (int i = 0; i < red.length; i++)
-            lineEntries.add(new Entry(i, Float.parseFloat(String.valueOf((blue[6 - i] + red[6 - i]) * 0.425))));
-
-        XAxis xvalMoney = lineChart.getXAxis();
-        xvalMoney.setDrawLabels(true);
-        xvalMoney.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return labels[6 - (int)value];
-            }
-        });
-
-        weekMoney.setText(new DecimalFormat("#.##").format((blueTotalWeek + redTotalWeek) * 0.425));
-        instMoney.setText(new DecimalFormat("#.##").format((blueTotalInstallation + redTotalInstallation) * 0.425));
-        LineDataSet lineSet = new LineDataSet(lineEntries, "Argent économisé");
-
-        try {
-            lineSet.setColor(getResources().getColor(R.color.DollarGreen));
-        } catch (IllegalStateException e) {
-            System.out.println(e);
-        }
-
-        LineData lineData = new LineData(lineSet);
-        lineChart.setData(lineData);
-        lineChart.invalidate();
-    }*/
