@@ -36,6 +36,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.eip.stopclopeip.Achievment.AchievmentFragment;
 import com.eip.stopclopeip.Advice.AdviceFragment;
 import com.eip.stopclopeip.Button.ButtonFragment;
 import com.eip.stopclopeip.Contact.ContactFragment;
@@ -68,6 +69,11 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setElevation(0);
         }
+
+        /*Intent zone_service = new Intent("com.hayes.android.MyService");
+        zone_service.putExtra("email", getIntent().getStringExtra("email"));
+        zone_service.putExtra("token", getIntent().getStringExtra("token"));
+        startService(zone_service);*/
 
         Intent intent = new Intent(this, TutorialActivity.class);
         startActivity(intent);
@@ -163,6 +169,9 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         } else if (id == com.eip.stopclopeip.R.id.nav_contacts) {
             toolbarTitle.setText("Contacts");
             mFragment = new ContactFragment();
+        } else if (id == R.id.nav_achievment) {
+            toolbarTitle.setText("Succès");
+            mFragment = new AchievmentFragment();
         } else if (id == com.eip.stopclopeip.R.id.nav_disconnect) {
             disconnect();
         }
