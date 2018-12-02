@@ -61,6 +61,10 @@
             android:name=".Bluetooth.BluetoothLeService"
             android:enabled="true" />
 
+        <service
+            android:name=".Service.ZoneService"
+            android:enabled="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVcQXo7tajyl-oCuT84Osb2aG7gzWfnaU" />

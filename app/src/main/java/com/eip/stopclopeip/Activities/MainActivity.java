@@ -42,11 +42,13 @@ import com.eip.stopclopeip.Button.ButtonFragment;
 import com.eip.stopclopeip.Contact.ContactFragment;
 import com.eip.stopclopeip.Home.HomeFragment;
 import com.eip.stopclopeip.R;
+import com.eip.stopclopeip.Service.ZoneService;
 import com.eip.stopclopeip.Stat.StatFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -70,10 +72,12 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
             toolbar.setElevation(0);
         }
 
-        /*Intent zone_service = new Intent("com.hayes.android.MyService");
+        Intent zone_service = new Intent(this, ZoneService.class);
         zone_service.putExtra("email", getIntent().getStringExtra("email"));
         zone_service.putExtra("token", getIntent().getStringExtra("token"));
-        startService(zone_service);*/
+        startService(zone_service);
+
+        statusCheck();
 
         Intent intent = new Intent(this, TutorialActivity.class);
         startActivity(intent);
@@ -90,8 +94,6 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
 
         onCreateProcess();
         serialBegin(115200);*/
-
-        statusCheck();
 
         DrawerLayout drawer = findViewById(com.eip.stopclopeip.R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -277,29 +279,6 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
             black_count.setText("" + (Integer.valueOf(black_count.getText().toString()) - 1));
     }
 
-    public void showNotification(String Msg) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(com.eip.stopclopeip.R.drawable.stopclop_logo)
-                .setContentTitle("StopClop\'")
-                .setContentText(Msg);
-
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle(Msg);
-
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        mBuilder.setStyle(inboxStyle);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
-    }
-
     public void Alert(String Msg) {
         Toast.makeText(this, Msg, Toast.LENGTH_SHORT).show();
     }
@@ -309,12 +288,21 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                launchService();
             } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 buildAlertMessageNoGps();
             } else {
                 locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                launchService();
             }} catch (NullPointerException e) {}
+    }
+
+    public void launchService() {
+        Intent zone_service = new Intent(this, ZoneService.class);
+        zone_service.putExtra("email", getIntent().getStringExtra("email"));
+        zone_service.putExtra("token", getIntent().getStringExtra("token"));
+        startService(zone_service);
     }
 
     public void disconnect() {

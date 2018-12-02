@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -43,7 +44,6 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.eip.stopclopeip.R.layout.activity_login);
-        final RequestQueue queue = Volley.newRequestQueue(this);
 
         mProgress = findViewById(com.eip.stopclopeip.R.id.login_progress_bar);
         mLoginForm = findViewById(com.eip.stopclopeip.R.id.login_form);
@@ -56,78 +56,12 @@ public class LoginActivity extends Activity {
         }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        final Boolean[] logError = {false};
 
         final Button mEmailSignInButton = findViewById(com.eip.stopclopeip.R.id.sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mEmail.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                mPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                showProgress(true);
-                if (mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
-                    mEmail.setError("Une adresse mail est requise");
-                    mPassword.setError("Un mot de passe est requis");
-                    showProgress(false);
-                    logError[0] = true;
-                } else if (mEmail.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
-                    mEmail.setError("Une adresse mail est requise");
-                    showProgress(false);
-                    logError[0] = true;
-                } else if (!mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
-                    mPassword.setError("Un mot de passe est requis");
-                    showProgress(false);
-                    logError[0] = true;
-                } else {
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                            + "&function=user.connection&email="
-                            + mEmail.getText().toString()
-                            + "&password="
-                            + mPassword.getText().toString(), new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            JSONObject jsonResponse = null;
-
-                            try {
-                                jsonResponse = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            try {
-                                JSONObject jsonData = new JSONObject(jsonResponse.getString("data"));
-                                if (jsonResponse.getString("reponse").equals("OK")) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.putExtra("token", jsonData.getString("token"));
-                                    intent.putExtra("email", mEmail.getText().toString());
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    mEmail.setError("Adresse mail ou mot de passe incorrecte");
-                                    showProgress(false);
-                                }
-                            } catch (JSONException e) {
-                                Alert("Impossible de se connecter au serveur");
-                                showProgress(false);
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Alert("Impossible de se connecter au serveur");
-                            showProgress(false);
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            return null;
-                        }
-                    };
-                    queue.add(stringRequest);
-                    queue.start();
-                    logError[0] = false;
-                }
+                connect(0);
             }
         });
 
@@ -138,6 +72,83 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    void connect(final int count) {
+        final Boolean[] logError = {false};
+        final RequestQueue queue = Volley.newRequestQueue(this);
+        mEmail.onEditorAction(EditorInfo.IME_ACTION_DONE);
+        mPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
+        showProgress(true);
+        if (mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
+            mEmail.setError("Une adresse mail est requise");
+            mPassword.setError("Un mot de passe est requis");
+            showProgress(false);
+            logError[0] = true;
+        } else if (mEmail.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
+            mEmail.setError("Une adresse mail est requise");
+            showProgress(false);
+            logError[0] = true;
+        } else if (!mEmail.getText().toString().isEmpty() && mPassword.getText().toString().isEmpty() && logError[0].equals(false)) {
+            mPassword.setError("Un mot de passe est requis");
+            showProgress(false);
+            logError[0] = true;
+        } else {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url
+                    + "&function=user.connection&email="
+                    + mEmail.getText().toString()
+                    + "&password="
+                    + mPassword.getText().toString(), new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    JSONObject jsonResponse = null;
+
+                    try {
+                        jsonResponse = new JSONObject(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        JSONObject jsonData = new JSONObject(jsonResponse.getString("data"));
+                        if (jsonResponse.getString("reponse").equals("OK")) {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("token", jsonData.getString("token"));
+                            intent.putExtra("email", mEmail.getText().toString());
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            mEmail.setError("Adresse mail ou mot de passe incorrecte");
+                            showProgress(false);
+                        }
+                    } catch (JSONException e) {
+                        Alert("Impossible de se connecter au serveur");
+                        Log.e("LOGIN", jsonResponse.toString());
+                        showProgress(false);
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (count < 5)
+                        connect(count + 1);
+                    else {
+                        Alert("Impossible de se connecter au serveur");
+                        Log.e("LOGIN", error.toString());
+                        showProgress(false);
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    return null;
+                }
+            };
+            queue.add(stringRequest);
+            queue.start();
+            logError[0] = false;
+        }
     }
 
     void showProgress(final boolean show) {

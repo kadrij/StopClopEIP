@@ -58,6 +58,10 @@ public class TutorialActivity extends Activity {
         }
     }
 
+    private void closeTutorial() {
+        finish();
+    }
+
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {
