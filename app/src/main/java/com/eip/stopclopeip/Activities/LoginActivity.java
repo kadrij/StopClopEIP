@@ -27,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.eip.stopclopeip.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Map;
@@ -105,14 +106,11 @@ public class LoginActivity extends Activity {
 
                     try {
                         jsonResponse = new JSONObject(response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
                         JSONObject jsonData = new JSONObject(jsonResponse.getString("data"));
+                        String state = jsonData.getString("state");
                         if (jsonResponse.getString("reponse").equals("OK")) {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("state", state);
                             intent.putExtra("token", jsonData.getString("token"));
                             intent.putExtra("email", mEmail.getText().toString());
                             startActivity(intent);

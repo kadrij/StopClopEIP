@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -72,15 +73,12 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
             toolbar.setElevation(0);
         }
 
-        Intent zone_service = new Intent(this, ZoneService.class);
-        zone_service.putExtra("email", getIntent().getStringExtra("email"));
-        zone_service.putExtra("token", getIntent().getStringExtra("token"));
-        startService(zone_service);
-
         statusCheck();
 
-        Intent intent = new Intent(this, TutorialActivity.class);
-        startActivity(intent);
+        if ((getIntent().getStringExtra("state")).equals("Vous etes connecte, premiere connexion")) {
+            Intent intent = new Intent(this, TutorialActivity.class);
+            startActivity(intent);
+        }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -112,6 +110,11 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         HomeFragment mFragment = new HomeFragment();
         mFragment.setArguments(bundle);
         fragmentManager.beginTransaction().replace(com.eip.stopclopeip.R.id.content_frame, mFragment).commit();
+
+        Intent zone_service = new Intent(getBaseContext(), ZoneService.class);
+        zone_service.putExtra("email", getIntent().getStringExtra("email"));
+        zone_service.putExtra("token", getIntent().getStringExtra("token"));
+        startService(zone_service);
     }
 
     @Override
@@ -187,9 +190,9 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         return true;
     }
 
-    public void sendObjectPression(final String color) {
+    private void sendObjectPression(final String color, final int count) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             statusCheck();
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
@@ -200,52 +203,61 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
                 public void run() {
                     runOnUiThread(new Runnable() {
 
+                        @SuppressLint("MissingPermission")
                         @Override
                         public void run() {
                             if (lon == 0 || lat == 0) {
-                                Alert("L'application n'est pas parvenu à obtenir votre position.");
-                                return;
+                                lon = (locationManager.getLastKnownLocation("gps")).getLongitude();
+                                lat = (locationManager.getLastKnownLocation("gps")).getLatitude();
                             }
-                            Log.v("Lon", "" + lon);
-                            addToCount(color);
-                            final RequestQueue queue = Volley.newRequestQueue(getBaseContext());
-                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                                    + "&function=coordonnee.add&email="
-                                    + getIntent().getStringExtra("email")
-                                    + "&token="
-                                    + getIntent().getStringExtra("token")
-                                    + "&x="
-                                    + lon
-                                    + "&y="
-                                    + lat
-                                    +"&button="
-                                    + color,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            JSONObject jsonResponse = null;
-                                            try {
-                                                jsonResponse = new JSONObject(response);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
+                            if (lon == 0 || lat == 0) {
+                                if (count < 5)
+                                    sendObjectPression(color, count + 1);
+                                else {
+                                    Alert("L'application n'est pas parvenu à obtenir votre position.");
+                                    return;
+                                }
+                            } else {
+                                addToCount(color);
+                                final RequestQueue queue = Volley.newRequestQueue(getBaseContext());
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url
+                                        + "&function=coordonnee.add&email="
+                                        + getIntent().getStringExtra("email")
+                                        + "&token="
+                                        + getIntent().getStringExtra("token")
+                                        + "&x="
+                                        + lon
+                                        + "&y="
+                                        + lat
+                                        + "&button="
+                                        + color,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                JSONObject jsonResponse = null;
+                                                try {
+                                                    jsonResponse = new JSONObject(response);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Alert("Impossible de se connecter au serveur");
-                                    reduceToCount(color);
-                                }
-                            }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-                                    Map<String, String> params = new HashMap();
-                                    params.put("myData", "{}");
-                                    return params;
-                                }
-                            };
-                            queue.add(stringRequest);
-                            queue.start();
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Alert("Impossible de se connecter au serveur");
+                                        reduceToCount(color);
+                                    }
+                                }) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap();
+                                        params.put("myData", "{}");
+                                        return params;
+                                    }
+                                };
+                                queue.add(stringRequest);
+                                queue.start();
+                            }
                         }
                     });
                 }
@@ -286,23 +298,18 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
     public void statusCheck() {
         try {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                launchService();
             } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 buildAlertMessageNoGps();
             } else {
                 locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-                launchService();
+                Intent zone_service = new Intent(this, ZoneService.class);
+                zone_service.putExtra("email", getIntent().getStringExtra("email"));
+                zone_service.putExtra("token", getIntent().getStringExtra("token"));
+                startService(zone_service);
             }} catch (NullPointerException e) {}
-    }
-
-    public void launchService() {
-        Intent zone_service = new Intent(this, ZoneService.class);
-        zone_service.putExtra("email", getIntent().getStringExtra("email"));
-        zone_service.putExtra("token", getIntent().getStringExtra("token"));
-        startService(zone_service);
     }
 
     public void disconnect() {
@@ -406,11 +413,11 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
     @Override
     public void onSerialReceived(String theString) {
         if (theString.equals("red"))
-            sendObjectPression("RED");
+            sendObjectPression("RED", 0);
         else if (theString.equals("blue"))
-            sendObjectPression("BLUE");
+            sendObjectPression("BLUE", 0);
         else if (theString.equals("black"))
-            sendObjectPression("BLACK");
+            sendObjectPression("BLACK", 0);
     }*/
 }
 

@@ -9,16 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class TutorialActivity extends Activity {
     private ViewPager mSlideViewPager;
     private LinearLayout mDotLayout;
-
     private TextView[] mDots;
-
     private SliderAdapter sliderAdapter;
+    private Button closeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,14 @@ public class TutorialActivity extends Activity {
         addDotsIndicator(0);
 
         mSlideViewPager.addOnPageChangeListener(viewListener);
+
+        closeButton = findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeTutorial();
+            }
+        });
     }
 
     public void addDotsIndicator(int position) {

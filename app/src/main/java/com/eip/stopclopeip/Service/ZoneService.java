@@ -1,7 +1,6 @@
 package com.eip.stopclopeip.Service;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -42,6 +41,7 @@ public class ZoneService extends Service {
     private float[] distance;
     private LocationManager locationManager;
     private boolean in_zone = false;
+    private RequestQueue queue;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -65,8 +65,8 @@ public class ZoneService extends Service {
     }
 
     private void getDangerousZones(final Location userLocation) {
-        final RequestQueue queue = Volley.newRequestQueue(this);
-
+        if (queue == null)
+            queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                 + "&function=algo&email="
                 + email

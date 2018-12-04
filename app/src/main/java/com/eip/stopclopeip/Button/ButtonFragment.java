@@ -1,7 +1,9 @@
 package com.eip.stopclopeip.Button;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -90,21 +92,21 @@ public class ButtonFragment extends Fragment {
         red_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPression(view, "RED");
+                sendPression(view, "RED", 0);
             }
         });
 
         blue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPression(view, "BLUE");
+                sendPression(view, "BLUE", 0);
             }
         });
 
         black_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPression(view, "BLACK");
+                sendPression(view, "BLACK", 0);
             }
         });
     }
@@ -134,15 +136,17 @@ public class ButtonFragment extends Fragment {
 
     public void statusCheck() {
         try {
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else {
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-        }} catch (NullPointerException e) {}
+            if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                buildAlertMessageNoGps();
+            } else {
+                locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+            }
+        } catch (NullPointerException e) {
+        }
     }
 
     private void buildAlertMessageNoGps() {
@@ -158,7 +162,7 @@ public class ButtonFragment extends Fragment {
         alert.show();
     }
 
-    private void sendPression(final View view, final String color){
+    private void sendPression(final View view, final String color, final int count) {
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             statusCheck();
@@ -172,57 +176,66 @@ public class ButtonFragment extends Fragment {
                 public void run() {
                     getActivity().runOnUiThread(new Runnable() {
 
+                        @SuppressLint("MissingPermission")
                         @Override
                         public void run() {
                             if (lon == 0 || lat == 0) {
-                                Alert("L'application n'est pas parvenu à obtenir votre position.");
-                                return;
+                                lon = (locationManager.getLastKnownLocation("gps")).getLongitude();
+                                lat = (locationManager.getLastKnownLocation("gps")).getLatitude();
                             }
-                            addToCount(view, color);
-                            final RequestQueue queue = Volley.newRequestQueue(getActivity());
-                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                                    + "&function=coordonnee.add&email="
-                                    + getArguments().getString("email")
-                                    + "&token="
-                                    + getArguments().getString("token")
-                                    + "&x="
-                                    + lon
-                                    + "&y="
-                                    + lat
-                                    +"&button="
-                                    + color,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            JSONObject jsonResponse = null;
-                                            try {
-                                                jsonResponse = new JSONObject(response);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
+                            if (lon == 0 || lat == 0) {
+                                if (count < 5)
+                                    sendPression(view, color, count + 1);
+                                else {
+                                    Alert("L'application n'est pas parvenu à obtenir votre position.");
+                                        return;
+                                }
+                            } else {
+                                addToCount(view, color);
+                                final RequestQueue queue = Volley.newRequestQueue(getActivity());
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url
+                                        + "&function=coordonnee.add&email="
+                                        + getArguments().getString("email")
+                                        + "&token="
+                                        + getArguments().getString("token")
+                                        + "&x="
+                                        + lon
+                                        + "&y="
+                                        + lat
+                                        + "&button="
+                                        + color,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                JSONObject jsonResponse = null;
+                                                try {
+                                                    jsonResponse = new JSONObject(response);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Alert("Impossible de se connecter au serveur");
-                                    reduceToCount(view, color);
-                                }
-                            }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-                                    Map<String, String> params = new HashMap();
-                                    params.put("myData", "{}");
-                                    return params;
-                                }
-                            };
-                            queue.add(stringRequest);
-                            queue.start();
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Alert("Impossible de se connecter au serveur");
+                                        reduceToCount(view, color);
+                                    }
+                                }) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap();
+                                        params.put("myData", "{}");
+                                        return params;
+                                    }
+                                };
+                                queue.add(stringRequest);
+                                queue.start();
+                            }
                         }
                     });
                 }
             }, 250);
         }
-        //getCount(view);
     }
 
     private void addToCount(View view, String button) {

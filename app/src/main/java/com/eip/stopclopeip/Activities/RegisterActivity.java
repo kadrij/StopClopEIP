@@ -92,15 +92,8 @@ public class RegisterActivity extends Activity {
                 @Override
                 public void onResponse(String response) {
                     JSONObject jsonResponse = null;
-
                     try {
                         jsonResponse = new JSONObject(response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        JSONObject jsonData = new JSONObject(jsonResponse.getString("data"));
                         if (jsonResponse.getString("reponse").equals("OK")) {
                             Alert("Compte créé");
                             finish();
