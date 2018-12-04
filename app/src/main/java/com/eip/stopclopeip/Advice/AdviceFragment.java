@@ -47,50 +47,64 @@ public class AdviceFragment extends Fragment {
         fatigueCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAdviceList("fatigue");
+                goToAdviceList("fatigue",
+                        "La cigarette enlève toute motivation naturelle au besoin de se dépenser physiquement.",
+                        getActivity().getResources().getColor(R.color.fatigue));
             }
         });
 
         insomnieCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAdviceList("insomnie");
+                goToAdviceList("insomnie",
+                        "La nicotine est une substance excitante qui entraîne des troubles du sommeil.",
+                        getActivity().getResources().getColor(R.color.insomnie));
             }
         });
 
         touxCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAdviceList("toux");
+                goToAdviceList("toux",
+                        "Le tabac est un polluant spécifique qui conduit à moyen terme à la bronchite chronique.",
+                        getActivity().getResources().getColor(R.color.toux));
             }
         });
 
         addictionCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAdviceList("addiction");
+                goToAdviceList("addiction",
+                        "La cigarette est une source de plaisirs dont on peut devenir dépendants.   ",
+                        getActivity().getResources().getColor(R.color.addiction));
             }
         });
 
         faimCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAdviceList("faim");
+                goToAdviceList("faim",
+                        "Le manque de nicotine peut entraîner un ressenti de vide, qu'on tente de combler par la nourriture.",
+                        getActivity().getResources().getColor(R.color.faim));
             }
         });
 
         irritabiliteCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToAdviceList("irritabilite");
+                goToAdviceList("irritabilite",
+                        "En sevrage tabagique, la quantité de nicotine qui atteint le cerveau chute brutalement et peut rendre irritable.",
+                        getActivity().getResources().getColor(R.color.irritabilite));
             }
         });
     }
 
-    public void goToAdviceList(String category) {
+    public void goToAdviceList(String category, String description, int color) {
         Fragment adviceListFragment = new AdviceListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("category", category);
+        bundle.putString("description", description);
+        bundle.putInt("color", color);
         adviceListFragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

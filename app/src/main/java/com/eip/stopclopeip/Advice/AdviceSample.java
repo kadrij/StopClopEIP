@@ -6,13 +6,15 @@ public class AdviceSample {
     private String comment;
     private String date;
     private String categorie;
+    private int color;
 
-    public AdviceSample(int id, String title, String comment, String date, String categorie) {
+    public AdviceSample(int id, String title, String comment, String date, String categorie, int color) {
         this.id = id;
         this.title = title;
         this.comment = comment;
         this.date = date;
         this.categorie = categorie;
+        this.color = color;
     }
 
 
@@ -54,5 +56,13 @@ public class AdviceSample {
 
     public void setCategorie(String categorie) {
         this.categorie = categorie;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

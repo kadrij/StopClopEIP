@@ -98,6 +98,7 @@ public class StatMoneyFragment extends Fragment {
                             getDayEconomies(userArray);
                             showProgress(false);
                         } catch (JSONException e) {
+                            showProgress(false);
                             e.printStackTrace();
                         }
                     }

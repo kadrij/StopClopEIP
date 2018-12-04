@@ -120,7 +120,7 @@ public class LoginActivity extends Activity {
                             showProgress(false);
                         }
                     } catch (JSONException e) {
-                        Alert("Impossible de se connecter au serveur");
+                        Alert("Adresse mail ou mot de passe incorrecte");
                         Log.e("LOGIN", jsonResponse.toString());
                         showProgress(false);
                         e.printStackTrace();

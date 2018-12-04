@@ -39,6 +39,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.eip.stopclopeip.Achievment.AchievmentFragment;
 import com.eip.stopclopeip.Advice.AdviceFragment;
+import com.eip.stopclopeip.Bluetooth.BlunoLibrary;
 import com.eip.stopclopeip.Button.ButtonFragment;
 import com.eip.stopclopeip.Contact.ContactFragment;
 import com.eip.stopclopeip.Home.HomeFragment;
@@ -55,7 +56,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BlunoLibrary implements NavigationView.OnNavigationItemSelectedListener {
     private String url = "http://romain-caldas.fr/api/rest.php?dev=69";
     private double lat = 0, lon = 0;
     private boolean onButtonFragment = false;
@@ -87,11 +88,8 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
             getWindow().setStatusBarColor(getResources().getColor(R.color.BlackButton));
         }
 
-        /*
-        BLE:
-
         onCreateProcess();
-        serialBegin(115200);*/
+        serialBegin(115200);
 
         DrawerLayout drawer = findViewById(com.eip.stopclopeip.R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -137,12 +135,9 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        /*
-        BLE
-
         if (id == R.id.action_scan) {
             buttonScanOnClickProcess();
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -171,8 +166,8 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         } else if (id == com.eip.stopclopeip.R.id.nav_advice) {
             toolbarTitle.setText("Conseils");
             mFragment = new AdviceFragment();
-        } else if (id == com.eip.stopclopeip.R.id.nav_contacts) {
-            toolbarTitle.setText("Contacts");
+        } else if (id == com.eip.stopclopeip.R.id.nav_map) {
+            toolbarTitle.setText("Carte");
             mFragment = new ContactFragment();
         } else if (id == R.id.nav_achievment) {
             toolbarTitle.setText("Succès");
@@ -218,7 +213,8 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
                                     return;
                                 }
                             } else {
-                                addToCount(color);
+                                if (onButtonFragment)
+                                    addToCount(color);
                                 final RequestQueue queue = Volley.newRequestQueue(getBaseContext());
                                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url
                                         + "&function=coordonnee.add&email="
@@ -245,7 +241,8 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         Alert("Impossible de se connecter au serveur");
-                                        reduceToCount(color);
+                                        if (onButtonFragment)
+                                            reduceToCount(color);
                                     }
                                 }) {
                                     @Override
@@ -362,7 +359,7 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
         public void onProviderDisabled(String provider) {}
     };
 
-    /*@Override
+    @Override
     protected void onResume() {
         super.onResume();
         onResumeProcess();
@@ -418,78 +415,5 @@ public class MainActivity extends /*BlunoLibrary*/ AppCompatActivity implements 
             sendObjectPression("BLUE", 0);
         else if (theString.equals("black"))
             sendObjectPression("BLACK", 0);
-    }*/
+    }
 }
-
-
-        /*final RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url
-                + "&function=coordonnee.get&email="
-                + getIntent().getStringExtra("email")
-                + "&token="
-                + getIntent().getStringExtra("token")
-                + "&time=1j",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSONObject jsonResponse = null;
-                        try {
-                            jsonResponse = new JSONObject(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            TextView red_count = findViewById(R.id.red_count);
-                            TextView blue_count = findViewById(R.id.blue_count);
-                            TextView black_count = findViewById(R.id.black_count);
-                            Date currentDate = new Date();
-                            Date date;
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-                            String data = jsonResponse.getString("data");
-                            JSONArray userArray = new JSONArray(data);
-
-                            int red = 0;
-                            int blue = 0;
-                            int black = 0;
-
-                            for (int i = 0; i < userArray.length(); i++) {
-                                JSONObject userData = userArray.getJSONObject(i);
-                                date = format.parse(userData.getString("date"));
-                                long diff = Math.abs(currentDate.getTime() - date.getTime());
-                                int day = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(diff)));
-                                if (TimeUnit.MILLISECONDS.toDays(diff) == 0) {
-                                    if (userData.getString("button").equals("BLUE"))
-                                        blue++;
-                                    else if (userData.getString("button").equals("RED"))
-                                        red++;
-                                    else
-                                        black++;
-                                }
-                            }
-
-                            red_count.setText("" + red);
-                            blue_count.setText("" + blue);
-                            black_count.setText("" + black);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Alert("Impossible de se connecter au serveur");
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap();
-                params.put("myData", "{}");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-        queue.start();*/

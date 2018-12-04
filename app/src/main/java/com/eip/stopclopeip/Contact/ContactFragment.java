@@ -234,7 +234,7 @@ public class ContactFragment extends Fragment implements OnMapReadyCallback {
     private Circle drawDangerZone(double zone_x, double zone_y) {
         Circle circle = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(zone_y, zone_x))
-                .radius(500)
+                .radius(250)
                 .strokeWidth(2)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(60, 89, 0, 0))

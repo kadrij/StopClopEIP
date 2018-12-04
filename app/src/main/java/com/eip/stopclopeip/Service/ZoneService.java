@@ -151,13 +151,13 @@ public class ZoneService extends Service {
         boolean check = false;
 
         for (int i = 0; i < distance.length; i++) {
-            if (distance[i] <= 500) {
+            if (distance[i] <= 250) {
                 check = true;
             }
         }
 
         if (check == true && in_zone == false) {
-            showNotification("Attention ! Vous êtes dans une zone à risque !");
+            showNotification("Attention !",  "Vous êtes dans une zone à risque !");
             in_zone = true;
             check = true;
         }
@@ -166,11 +166,11 @@ public class ZoneService extends Service {
             in_zone = false;
     }
 
-    private void showNotification(String Msg) {
+    private void showNotification(String bigMsg, String Msg) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(com.eip.stopclopeip.R.drawable.stopclop_logo)
-                .setContentTitle("StopClop\'")
-                .setContentText(Msg)
+                .setContentTitle(bigMsg)
+                .setContentInfo(Msg)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();

@@ -35,6 +35,7 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
         final AdviceSample adviceSample = AdviceList.get(position);
         holder.mTitle.setText(adviceSample.getTitle());
         holder.mComment.setText(adviceSample.getComment());
+        holder.mColorBar.setBackgroundColor(adviceSample.getColor());
     }
 
     @Override
@@ -51,11 +52,13 @@ public class AdviceAdapter extends RecyclerView.Adapter<AdviceAdapter.AdviceView
     class AdviceViewHolder extends RecyclerView.ViewHolder {
         TextView mTitle;
         TextView mComment;
+        View mColorBar;
 
         public AdviceViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.advice_title);
             mComment = itemView.findViewById(R.id.advice_comment);
+            mColorBar = itemView.findViewById(R.id.color_bar);
         }
     }
 }

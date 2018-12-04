@@ -143,7 +143,7 @@ public class AchievmentFragment extends Fragment {
                                     if (achievment_check.charAt(i) == '0') {
                                         achievment_images[i].setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.locked));
                                         achievment_logos[i] = R.drawable.locked;
-                                        achievment_descs[i] = "???";
+                                        achievment_descs[i] = "?";
                                     }
                                     achievment_images[i].setOnClickListener(new View.OnClickListener() {
                                         @Override

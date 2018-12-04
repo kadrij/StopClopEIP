@@ -30,17 +30,17 @@ public class SliderAdapter extends PagerAdapter {
     };
 
     public String[] slide_titles = {
-            "Cactos1",
-            "Cactos2",
-            "Cactos3",
-            "Cactos4"
+            "Accueil",
+            "Statistique",
+            "Conseil",
+            "Carte"
     };
 
     public String[] slide_descs = {
-            "Voici Cactos1",
-            "Voici Cactos2",
-            "Voici Cactos3",
-            "Voici Cactos4"
+            "L’état de Cactos le cactus représentera votre évolution",
+            "Suivez vos statistiques dans l’arrêt de la cigarette en temps réel",
+            "Consultez les conseils des autres utilisateurs",
+            "La carte proposera des pharmacies ainsi que vos zones à risques à proximité"
     };
 
     @Override

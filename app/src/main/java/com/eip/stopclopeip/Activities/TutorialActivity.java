@@ -74,7 +74,6 @@ public class TutorialActivity extends Activity {
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {
-
         }
 
         @Override

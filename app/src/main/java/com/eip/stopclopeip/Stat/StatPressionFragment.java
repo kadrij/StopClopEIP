@@ -106,6 +106,7 @@ public class StatPressionFragment extends Fragment {
                             setPressionChart(view, red, blue, black, labels);
                             showProgress(false);
                         } catch (JSONException e) {
+                            showProgress(false);
                             e.printStackTrace();
                         }
                     }

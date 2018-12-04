@@ -9,11 +9,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -40,6 +40,7 @@ public class AdviceListFragment extends Fragment {
     private RecyclerView recyclerView;
     private AdviceAdapter adapter;
     private List<AdviceSample> adviceList;
+    private TextView description;
 
     public static AdviceListFragment newInstance(String param1, String param2) {
         AdviceListFragment fragment = new AdviceListFragment();
@@ -66,6 +67,9 @@ public class AdviceListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.advice_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        description = view.findViewById(R.id.advice_category_desc);
+        description.setText(getArguments().getString("description"));
+        description.setBackgroundColor(getArguments().getInt("color"));
         showProgress(true);
         createAdviceList();
     }
@@ -90,7 +94,8 @@ public class AdviceListFragment extends Fragment {
                                             adviceData.getString("title"),
                                             adviceData.getString("comment"),
                                             adviceData.getString("date"),
-                                            adviceData.getString("categorie")));
+                                            adviceData.getString("categorie"),
+                                            getArguments().getInt("color")));
                                 }
                             }
                             adapter = new AdviceAdapter(getActivity(), adviceList);
