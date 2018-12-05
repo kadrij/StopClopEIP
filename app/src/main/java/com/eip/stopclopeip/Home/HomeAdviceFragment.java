@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class HomeAdviceFragment extends Fragment {
     private ConstraintLayout mProgress, mHomeAdviceForm;
@@ -58,6 +59,8 @@ public class HomeAdviceFragment extends Fragment {
     }
 
     public void prepareAdvice(View view) {
+        showProgress(true);
+
         final RequestQueue queue = Volley.newRequestQueue(getActivity());
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 "https://romain-caldas.fr/api/rest.php?dev=69&function=conseil.getAll&fbclid=IwAR1cGjI0W6brskBVpiQU_QcmxQJ8fhKsInyt4fD-tBHGnrt6o_70bGTQS_M",
@@ -69,10 +72,12 @@ public class HomeAdviceFragment extends Fragment {
                             jsonResponse = new JSONObject(response);
                             String data = jsonResponse.getString("data");
                             JSONArray adviceArray = new JSONArray(data);
-                            int i = (int) (Math.random() % adviceArray.length());
+                            Random random = new Random();
+                            int i = random.nextInt(adviceArray.length());
                             JSONObject adviceData = adviceArray.getJSONObject(i);
                             title.setText(adviceData.getString("title"));
                             comment.setText(adviceData.getString("comment"));
+                            showProgress(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -90,7 +95,6 @@ public class HomeAdviceFragment extends Fragment {
                 return params;
             }
         };
-        showProgress(false);
         queue.add(stringRequest);
         queue.start();
     }
